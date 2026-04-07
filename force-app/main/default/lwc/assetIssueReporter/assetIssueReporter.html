@@ -1,0 +1,20 @@
+<template>
+    <lightning-card title="Report Asset Issue" icon-name="custom:custom85">
+        <div class="slds-var-p-around_medium">
+            <lightning-record-edit-form object-api-name="Asset_Issue__c" onsubmit={handleSubmit}
+                onsuccess={handleSuccess}>
+
+                <lightning-messages></lightning-messages>
+
+                <lightning-input-field field-name="Asset_Type__c"></lightning-input-field>
+                <lightning-input-field field-name="Severity__c"></lightning-input-field>
+                <lightning-input-field field-name="Description__c"></lightning-input-field>
+
+                <div class="slds-var-m-top_medium">
+                    <lightning-button variant="brand" type="submit" label="Submit Issue"></lightning-button>
+                </div>
+
+            </lightning-record-edit-form>
+        </div>
+    </lightning-card>
+</template>
