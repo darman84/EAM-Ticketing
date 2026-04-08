@@ -1,0 +1,39 @@
+.map-container .leaflet-host {
+    width: 100%;
+    height: 320px;
+    /* explicit pixel height to avoid fractional scaling */
+    min-height: 320px;
+    image-rendering: auto;
+    transform: none;
+    backface-visibility: hidden;
+    -webkit-font-smoothing: antialiased;
+    -webkit-backface-visibility: hidden;
+    will-change: transform;
+}
+
+/* Map control layout */
+.map-controls {
+    gap: 0.5rem;
+    align-items: center;
+}
+
+/* Make controls touch friendly on mobile */
+.map-controls .control-col lightning-button,
+.map-controls .control-col lightning-button lightning-primitive-icon {
+    --lwc-button-padding-vertical: 0.5rem;
+    --lwc-button-padding-horizontal: 0.75rem;
+}
+
+/* Hide controls on very small screens to maximize map area */
+@media only screen and (max-width: 420px) {
+    .map-controls {
+        display: none;
+    }
+}
+
+/* Slight spacing for desktop */
+@media only screen and (min-width: 421px) {
+    .map-controls .control-col {
+        margin-right: 0.5rem;
+    }
+}

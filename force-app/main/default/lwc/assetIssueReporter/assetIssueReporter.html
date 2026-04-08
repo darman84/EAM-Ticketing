@@ -17,16 +17,63 @@
                         </lightning-layout-item>
 
                         <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                            <div class="slds-var-p-bottom_small">
-                                <lightning-button icon-name="utility:checkin" label="Use My Current Location"
-                                    onclick={getLocation}></lightning-button>
+                            <div class="slds-var-p-bottom_small slds-grid slds-gutters slds-wrap map-controls">
+                                <div class="slds-col control-col">
+                                    <lightning-button icon-name="utility:checkin" label="Use My Current Location"
+                                        onclick={getLocation} alternative-text="Use my current location"
+                                        title="Use my current location"></lightning-button>
+                                </div>
+                                <div class="slds-col control-col">
+                                    <lightning-button icon-name="utility:target_mode" label="Set Pin at Center"
+                                        variant="neutral" onclick={setPinAtCenter}
+                                        alternative-text="Set pin at map center"
+                                        title="Set pin at map center"></lightning-button>
+                                </div>
+                                <div class="slds-col control-col">
+                                    <lightning-button icon-name="utility:add" label="Zoom In" variant="neutral"
+                                        onclick={zoomIn} alternative-text="Zoom in" title="Zoom in"></lightning-button>
+                                </div>
+                                <div class="slds-col control-col">
+                                    <lightning-button icon-name="utility:dash" label="Zoom Out" variant="neutral"
+                                        onclick={zoomOut} alternative-text="Zoom out"
+                                        title="Zoom out"></lightning-button>
+                                </div>
+                                <div class="slds-col control-col">
+                                    <lightning-button icon-name="utility:refresh" label="Toggle Drag" variant="neutral"
+                                        onclick={toggleDrag} alternative-text="Toggle map dragging"
+                                        title="Toggle map dragging"></lightning-button>
+                                </div>
+                                <div class="slds-col control-col">
+                                    <lightning-button icon-name="utility:location" label="Clear Pin" variant="neutral"
+                                        onclick={clearPin} alternative-text="Clear selected pin"
+                                        title="Clear selected pin"></lightning-button>
+                                </div>
                             </div>
+
+                            <!-- Interactive Leaflet map container with crosshair overlay for center-set UX -->
+                            <div class="map-container" style="position: relative;">
+                                <div data-map class="leaflet-host"></div>
+                                <!-- Crosshair overlay -->
+                                <div
+                                    style="pointer-events:none; position:absolute; top:50%; left:50%; width:24px; height:24px; margin-left:-12px; margin-top:-12px; border:2px solid #1b96ff; border-radius:50%; box-shadow:0 0 0 2px rgba(27,150,255,0.2);">
+                                </div>
+                                <div
+                                    style="pointer-events:none; position:absolute; top:50%; left:0; right:0; height:0; border-top:1px dashed rgba(27,150,255,0.5);">
+                                </div>
+                                <div
+                                    style="pointer-events:none; position:absolute; left:50%; top:0; bottom:0; width:0; border-left:1px dashed rgba(27,150,255,0.5);">
+                                </div>
+                            </div>
+
+                            <!-- Preview using lightning-map kept in sync -->
                             <template if:true={mapMarkers.length}>
-                                <lightning-map map-markers={mapMarkers} zoom-level="15"></lightning-map>
+                                <div class="slds-var-m-top_small">
+                                    <lightning-map map-markers={mapMarkers} zoom-level="15"></lightning-map>
+                                </div>
                             </template>
                             <template if:false={mapMarkers.length}>
-                                <div class="slds-box slds-text-align_center slds-text-color_weak">Click above to attach
-                                    GPS coordinates.</div>
+                                <div class="slds-box slds-text-align_center slds-text-color_weak">Use the interactive
+                                    map above to drop/drag a pin, or click “Use My Current Location”.</div>
                             </template>
                         </lightning-layout-item>
                     </lightning-layout>
