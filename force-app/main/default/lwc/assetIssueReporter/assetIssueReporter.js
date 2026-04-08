@@ -52,11 +52,32 @@ export default class AssetIssueReporter extends LightningElement {
         this.recordId = event.detail.id;
         this.showForm = false;
         this.showUpload = true; // Transition to Step 2
+        this.dispatchEvent(new ShowToastEvent({ title: 'Success', message: 'Issue Logged!', variant: 'success' }));
     }
 
     handleUploadFinished(event) {
         const uploadedFiles = event.detail.files.length;
         this.dispatchEvent(new ShowToastEvent({ title: 'Success', message: `${uploadedFiles} photo(s) attached.`, variant: 'success' }));
+    }
+
+    handleError(event) {
+        // Surface record save errors in Experience Cloud to diagnose missing permissions/FLS/validation rules
+        let message = 'Save failed.';
+        try {
+            if (event?.detail?.message) {
+                message = event.detail.message;
+            } else if (event?.detail?.output?.errors?.length) {
+                message = event.detail.output.errors.map(e => e.message).join(' ');
+            } else if (event?.detail?.output?.fieldErrors) {
+                const fieldMsgs = Object.values(event.detail.output.fieldErrors)
+                    .flat()
+                    .map(e => e.message);
+                if (fieldMsgs.length) message = fieldMsgs.join(' ');
+            }
+        } catch (e) {
+            // no-op, keep default message
+        }
+        this.dispatchEvent(new ShowToastEvent({ title: 'Error', message, variant: 'error' }));
     }
 
     resetWizard() {
