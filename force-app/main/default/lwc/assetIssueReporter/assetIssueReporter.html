@@ -1,20 +1,56 @@
 <template>
-    <lightning-card title="Report Asset Issue" icon-name="custom:custom85">
+    <lightning-card title="Report Infrastructure Issue" icon-name="custom:custom85">
         <div class="slds-var-p-around_medium">
-            <lightning-record-edit-form object-api-name="Asset_Issue__c" onsubmit={handleSubmit}
-                onsuccess={handleSuccess}>
 
-                <lightning-messages></lightning-messages>
+            <template if:true={showForm}>
+                <lightning-record-edit-form object-api-name="Asset_Issue__c" onsubmit={handleSubmit}
+                    onsuccess={handleSuccess}>
+                    <lightning-messages></lightning-messages>
 
-                <lightning-input-field field-name="Asset_Type__c"></lightning-input-field>
-                <lightning-input-field field-name="Severity__c"></lightning-input-field>
-                <lightning-input-field field-name="Description__c"></lightning-input-field>
+                    <lightning-layout multiple-rows>
+                        <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                            <lightning-input-field field-name="Asset_Type__c" required></lightning-input-field>
+                            <lightning-input-field field-name="Severity__c" required></lightning-input-field>
+                            <lightning-input-field field-name="Description__c" required></lightning-input-field>
+                            <lightning-input-field field-name="Submitter_Email__c"></lightning-input-field>
+                            <lightning-input-field field-name="Submitter_Phone__c"></lightning-input-field>
+                        </lightning-layout-item>
 
-                <div class="slds-var-m-top_medium">
-                    <lightning-button variant="brand" type="submit" label="Submit Issue"></lightning-button>
+                        <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                            <div class="slds-var-p-bottom_small">
+                                <lightning-button icon-name="utility:checkin" label="Use My Current Location"
+                                    onclick={getLocation}></lightning-button>
+                            </div>
+                            <template if:true={mapMarkers.length}>
+                                <lightning-map map-markers={mapMarkers} zoom-level="15"></lightning-map>
+                            </template>
+                            <template if:false={mapMarkers.length}>
+                                <div class="slds-box slds-text-align_center slds-text-color_weak">Click above to attach
+                                    GPS coordinates.</div>
+                            </template>
+                        </lightning-layout-item>
+                    </lightning-layout>
+
+                    <div class="slds-var-m-top_medium slds-text-align_center">
+                        <lightning-button variant="brand" type="submit" label="Next: Attach Photos"></lightning-button>
+                    </div>
+                </lightning-record-edit-form>
+            </template>
+
+            <template if:true={showUpload}>
+                <div class="slds-text-align_center">
+                    <p class="slds-text-heading_small slds-var-m-bottom_medium">Issue Logged! Add photos to help our
+                        crews find it.</p>
+                    <lightning-file-upload label="Attach Images" name="fileUploader" accept=".jpg, .png, .jpeg"
+                        record-id={recordId} onuploadfinished={handleUploadFinished} multiple>
+                    </lightning-file-upload>
+                    <div class="slds-var-m-top_large">
+                        <lightning-button variant="success" label="Finish & Return"
+                            onclick={resetWizard}></lightning-button>
+                    </div>
                 </div>
+            </template>
 
-            </lightning-record-edit-form>
         </div>
     </lightning-card>
 </template>
