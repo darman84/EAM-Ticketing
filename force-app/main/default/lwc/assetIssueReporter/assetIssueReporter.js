@@ -2,6 +2,7 @@ import { LightningElement, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { loadScript, loadStyle } from 'lightning/platformResourceLoader';
 import LEAFLET_RES from '@salesforce/resourceUrl/Leaflet';
+import createIssueFromJson from '@salesforce/apex/AssetIssueFacade.createIssueWithFilesFromJson';
 
 // Fallback center: Plano, TX
 const FALLBACK_CENTER = { lat: 33.0198, lng: -96.6989 };
@@ -11,6 +12,34 @@ export default class AssetIssueReporter extends LightningElement {
     @track showForm = true;
     @track showUpload = false;
     @track mapMarkers = [];
+
+    // New client-side form state
+    @track form = {
+        assetType: '',
+        severity: '',
+        description: '',
+        submitterEmail: '',
+        submitterPhone: ''
+    };
+    @track filePreviews = [];
+    submitting = false;
+    // Private flags used previously for one-time console logs have been removed in cleanup
+
+    // Picklist options (mirror server allowlist used in Apex)
+    get assetTypeOptions() {
+        return [
+            { label: 'Signage', value: 'Signage' },
+            { label: 'Water/Sewer', value: 'Water/Sewer' },
+            { label: 'Pavement', value: 'Pavement' }
+        ];
+    }
+    get severityOptions() {
+        return [
+            { label: 'Routine', value: 'Routine' },
+            { label: 'Urgent', value: 'Urgent' },
+            { label: 'Emergency', value: 'Emergency' }
+        ];
+    }
 
     recordId;
     latitude;
@@ -445,67 +474,140 @@ export default class AssetIssueReporter extends LightningElement {
         }
     }
 
-    handleSubmit(event) {
-        event.preventDefault();
-        const fields = event.detail.fields;
+    // Form input handlers (normalize/trim values)
+    onFieldChange = (e) => {
+        const { name } = e.target;
+        // Some base components (combobox) put value on event.detail.value; prefer that when present
+        let raw = (e && e.detail && typeof e.detail.value !== 'undefined') ? e.detail.value
+            : (e && e.target && typeof e.target.value !== 'undefined') ? e.target.value
+                : null;
+        let val = (typeof raw === 'string') ? raw.trim() : raw;
+        if (name in this.form) {
+            // keep empty string for UI binding; optional fields coerced to null on submit
+            this.form = { ...this.form, [name]: val || '' };
+        }
+    };
 
-        // Custom Validation
-        if (!fields.Asset_Type__c || !fields.Severity__c || !fields.Description__c) {
-            this.dispatchEvent(
-                new ShowToastEvent({
-                    title: 'Error',
-                    message: 'Please fill out all required fields.',
-                    variant: 'error'
-                })
-            );
+    // Handle file selection and preview
+    onFilesSelected = async (e) => {
+        const files = e.target.files ? Array.from(e.target.files) : [];
+        if (!files.length) {
+            this.filePreviews = [];
+            return;
+        }
+        // Client-side cap to align with Apex MAX_FILES
+        const max = 5;
+        const selected = files.slice(0, max);
+        const previews = await Promise.all(
+            selected.map(async (f) => {
+                const base64 = await this.readFileAsBase64(f);
+                return {
+                    name: f.name,
+                    type: f.type,
+                    size: f.size,
+                    sizeLabel: this.humanSize(f.size),
+                    base64
+                };
+            })
+        );
+        this.filePreviews = previews;
+    };
+
+    readFileAsBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onerror = () => reject(new Error('Failed to read file'));
+            reader.onload = () => {
+                const result = reader.result;
+                if (typeof result === 'string') {
+                    resolve(result); // may include data:*;base64, prefix; Apex strips if present
+                } else {
+                    reject(new Error('Unexpected file read result'));
+                }
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    humanSize(bytes) {
+        if (!bytes && bytes !== 0) return '';
+        const thresh = 1024;
+        if (bytes < thresh) return `${bytes} B`;
+        const units = ['KB', 'MB', 'GB'];
+        let u = -1;
+        do {
+            bytes /= thresh;
+            ++u;
+        } while (bytes >= thresh && u < units.length - 1);
+        return `${bytes.toFixed(1)} ${units[u]}`;
+    }
+
+    async submitIssue() {
+        // Read values using detail-aware getter
+        const getVal = (k) => {
+            const v = this.form && Object.prototype.hasOwnProperty.call(this.form, k) ? this.form[k] : '';
+            return (typeof v === 'string') ? v.trim() : (v ?? '');
+        };
+        const assetType = getVal('assetType');
+        const severity = getVal('severity');
+        const description = getVal('description');
+
+        if (!assetType || !severity || !description) {
+            this.dispatchEvent(new ShowToastEvent({ title: 'Error', message: 'Please complete all required fields: Asset Type, Severity, and Description.', variant: 'error' }));
             return;
         }
 
-        // Inject selected coordinates into the Salesforce fields before saving
-        if (this.latitude != null && this.longitude != null) {
-            fields.Location__Latitude__s = this.latitude;
-            fields.Location__Longitude__s = this.longitude;
-        }
-
-        this.template.querySelector('lightning-record-edit-form').submit(fields);
-    }
-
-    handleSuccess(event) {
-        this.recordId = event.detail.id;
-        this.showForm = false;
-        this.showUpload = true; // Transition to Step 2
-        this.dispatchEvent(new ShowToastEvent({ title: 'Success', message: 'Issue Logged!', variant: 'success' }));
-    }
-
-    handleUploadFinished(event) {
-        const uploadedFiles = event.detail.files.length;
-        this.dispatchEvent(
-            new ShowToastEvent({
-                title: 'Success',
-                message: `${uploadedFiles} photo(s) attached.`,
-                variant: 'success'
-            })
-        );
-    }
-
-    handleError(event) {
-        // Surface record save errors in Experience Cloud to diagnose missing permissions/FLS/validation rules
-        let message = 'Save failed.';
+        this.submitting = true;
         try {
-            if (event?.detail?.message) {
-                message = event.detail.message;
-            } else if (event?.detail?.output?.errors?.length) {
-                message = event.detail.output.errors.map((e) => e.message).join(' ');
-            } else if (event?.detail?.output?.fieldErrors) {
-                const fieldMsgs = Object.values(event.detail.output.fieldErrors)
-                    .flat()
-                    .map((e) => e.message);
-                if (fieldMsgs.length) message = fieldMsgs.join(' ');
+            // Assemble a plain data object
+            const files = Array.isArray(this.filePreviews) ? this.filePreviews.map(fp => ({
+                fileName: fp?.name || '',
+                contentType: fp?.type || '',
+                base64Data: fp?.base64 || ''
+            })) : [];
+
+            const req = {
+                assetType,
+                severity,
+                description,
+                latitude: (typeof this.latitude === 'number') ? this.latitude : null,
+                longitude: (typeof this.longitude === 'number') ? this.longitude : null,
+                submitterEmail: (() => {
+                    const s = this.form && typeof this.form.submitterEmail === 'string' ? this.form.submitterEmail.trim() : '';
+                    return s || null;
+                })(),
+                submitterPhone: (() => {
+                    const s = this.form && typeof this.form.submitterPhone === 'string' ? this.form.submitterPhone.trim() : '';
+                    return s || null;
+                })(),
+                files
+            };
+
+            // Hard-coerce to a fully plain object by reconstructing via object spread on JSON clone
+            const liveReq = { ...JSON.parse(JSON.stringify(req)) };
+
+            // Call the JSON-string overload to bypass any Experience Cloud proxy serialization
+            const reqJson = JSON.stringify(liveReq);
+            const res = await createIssueFromJson({ reqJson });
+
+            if (res && res.success) {
+                this.recordId = res.issueId;
+                this.showForm = false;
+                this.showUpload = true;
+                this.dispatchEvent(new ShowToastEvent({ title: 'Success', message: 'Issue Logged!', variant: 'success' }));
+            } else {
+                const msg = (res && res.message) ? res.message : 'Submission failed.';
+                this.dispatchEvent(new ShowToastEvent({ title: 'Error', message: msg, variant: 'error' }));
             }
-        } catch (e) {
-            // no-op, keep default message
+        } catch (err) {
+            let msg = 'Submission failed.';
+            try {
+                msg = err?.body?.message || err?.message || msg;
+            } catch (e) { /* ignore */ }
+            this.dispatchEvent(new ShowToastEvent({ title: 'Error', message: msg, variant: 'error' }));
+        } finally {
+            this.submitting = false;
         }
-        this.dispatchEvent(new ShowToastEvent({ title: 'Error', message, variant: 'error' }));
     }
 
     resetWizard() {
@@ -518,6 +620,8 @@ export default class AssetIssueReporter extends LightningElement {
         this.latitude = null;
         this.longitude = null;
         this.marker = null;
+        this.filePreviews = [];
+        this.form = { assetType: '', severity: '', description: '', submitterEmail: '', submitterPhone: '' };
         this.showForm = true; // Return to start
     }
 }
