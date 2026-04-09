@@ -9,11 +9,12 @@ The system utilizes a hybrid approach of declarative automation and programmatic
 
 **Workflow:**
 1. **Intake:** Unauthenticated users submit issues via an Experience Cloud site hosting a custom Lightning Web Component (LWC).
-2. **Storage:** Data is committed to the custom `Asset_Issue__c` object.
-3. **Routing:** An After-Save Record-Triggered Flow assigns the record to the appropriate internal maintenance queue.
-4. **Integration Handoff:** The Flow invokes a bridging Apex class.
-5. **Callout:** A Queueable Apex job serializes the data into JSON and POSTs it to the external EAM system endpoint.
-6. **Confirmation:** The Queueable job processes the HTTP response and updates the `Sync_Status__c` and `External_EAM_ID__c` on the Salesforce record.
+2. **Submission (System Context via Apex Facade):** The LWC constructs a JSON payload and calls an Apex facade method running in system context, which performs record creation and file attachment. This avoids Guest User CRUD/file-permission constraints. The LWC does not use `lightning-record-edit-form` or `lightning-file-upload`.
+3. **Storage:** Data is committed to the custom `Asset_Issue__c` object.
+4. **Routing:** An After-Save Record-Triggered Flow assigns the record to the appropriate internal maintenance queue.
+5. **Integration Handoff:** The Flow invokes a bridging Apex class.
+6. **Callout:** A Queueable Apex job serializes the data into JSON and POSTs it to the external EAM system endpoint.
+7. **Confirmation:** The Queueable job processes the HTTP response and updates the `Sync_Status__c` and `External_EAM_ID__c` on the Salesforce record.
 
 ### 3. Data Model
 **Custom Object:** `Asset_Issue__c`
@@ -31,14 +32,16 @@ The system utilizes a hybrid approach of declarative automation and programmatic
 
 ### 4. Security & Access Control
 * **Public Portal:** Hosted via an Experience Cloud "Build Your Own (Aura)" site.
-* **Guest User Profile:** The Public Ticketing Profile is granted `Create` permissions on the `Asset_Issue__c` object.
-* **Field-Level Security (FLS):** The Guest User Profile is explicitly granted `Edit` access to `Asset_Type__c`, `Severity__c`, `Description__c`, and `Location__c` to allow data insertion via the LWC. It does *not* have access to modify the Sync Status or External ID.
+* **Apex Class Access:** Grant Site Guest User Apex Class Access to `AssetIssueFacade` (covers both facade methods).
+* **Guest CRUD/FLS:** The LWC no longer performs direct DML or native file upload; Guest `Edit` is not required for submission. If picklists are rendered from static options (current approach), Guest FLS is minimal; if dynamic field reads are added later, ensure appropriate read access.
+* **Time Zone (Display):** Set the Site Guest User’s time zone (e.g., America/Chicago) to ensure expected timestamp rendering; Salesforce stores datetime in UTC and renders per viewer’s time zone.
 
 ### 5. User Interface (Lightning Web Component)
 **Component Name:** `assetIssueReporter`
-* **Framework:** HTML template leveraging `lightning-record-edit-form`.
-* **Validation:** Client-side JavaScript intercepts the `onsubmit` event to verify no fields are null. Form submission is aborted, and a toast error is fired if validation fails.
-* **UX/Feedback:** Upon `onsuccess`, fires a positive `ShowToastEvent` and utilizes `this.template.querySelectorAll` to seamlessly reset the input fields for the next submission without requiring a page reload.
+* **Framework:** Custom form markup (no `lightning-record-edit-form`).
+* **Submission Path:** The component gathers inputs (including optional files as base64) and submits a JSON payload to an Apex facade running in system context. The facade creates the `Asset_Issue__c` record and attaches files using `ContentVersion` (`FirstPublishLocationId`).
+* **Validation:** Client-side validation ensures required fields (Asset_Type__c, Severity__c, Description__c) are present; server-side validation is enforced by the facade as well.
+* **UX/Feedback:** On success, displays a success toast and advances to a finish state; reset logic clears form and map selection for subsequent submissions.
 * **Availability:** Exposed to `lightning__HomePage`, `lightning__RecordPage`, `lightning__AppPage`, and `lightningCommunity__Page`.
 
 ### 6. Declarative Automation
@@ -49,6 +52,14 @@ The system utilizes a hybrid approach of declarative automation and programmatic
 * **Extensibility:** Executes the `EAMIntegrationRouter` Apex Action passing the `$Record.Id`.
 
 ### 7. Programmatic Integration
+#### 7.0 Apex Facade (System Context)
+* **Class:** `AssetIssueFacade`
+* **Methods:**
+  * `@AuraEnabled CreateIssueResult createIssueWithFiles(CreateIssueRequest req)` — primary typed DTO entry (retained).
+  * `@AuraEnabled CreateIssueResult createIssueWithFilesFromJson(String reqJson)` — resilient overload that parses a JSON string into the DTO; recommended for Experience Cloud to avoid client-side Proxy/marshalling issues.
+* **Behavior:** Validates allowlisted fields; inserts `Asset_Issue__c`; attaches files via `ContentVersion (FirstPublishLocationId = issue.Id)`; returns result DTO with record and file IDs.
+* **Security:** `without sharing` to run in system context; strict field allowlisting; sanitized `AuraHandledException` messages.
+
 #### 7.1 Named Credential
 * **Label:** `EAM_Mock_Endpoint`
 * **Endpoint:** `https://postman-echo.com/post`

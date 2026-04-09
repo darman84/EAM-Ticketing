@@ -5,7 +5,7 @@ This repository contains a proof-of-concept Salesforce application designed to m
 The application utilizes a custom Lightning Web Component (LWC) for rapid data entry, declarative Flow automation for departmental routing, and asynchronous Apex for robust external REST API integration.
 
 ## Key Features
-  * **Public Intake Portal:** A mobile-responsive LWC form accessible to unauthenticated guest users.
+  * **Public Intake Portal:** A mobile-responsive LWC form accessible to unauthenticated guest users. The LWC sends a JSON payload to an Apex facade (system context) for record creation and file attachment; it does not use lightning-record-edit-form or lightning-file-upload.
   * **Automated Triage:** Record-Triggered Flows automatically route new issues to the correct maintenance queue (Signage, Water/Sewer, Pavement) based on the asset type.
   * **Asynchronous Integration:** A Queueable Apex process constructs a JSON payload and performs an HTTP POST callout to an external EAM endpoint without impacting the user's UI transaction.
   * **Bulkified Architecture:** The Apex integration is designed to handle up to 100 simultaneous record insertions without violating Salesforce callout governor limits.
@@ -29,7 +29,7 @@ force-app/main/default/
 ├── flows/
 │   └── Asset_Issue_Routing_and_Sync.flow-meta.xml
 ├── lwc/
-│   └── assetIssueReporter/         # Public intake form component
+│   └── assetIssueReporter/         # Public intake form component (JSON -> Apex facade; no record-edit-form/file-upload)
 ├── objects/
 │   └── Asset_Issue__c/             # Custom data model
 └── namedCredentials/
@@ -66,7 +66,11 @@ force-app/main/default/
 
       * **Queues:** Create three standard queues (`Signs Maintenance Queue`, `Utility Operations Queue`, `Pavement & Streets Queue`) and assign `Asset_Issue__c` as a supported object.
       * **Flow:** Open the `Asset_Issue_Routing_and_Sync` Flow, update the Assignment nodes with your specific Queue IDs, and Activate the Flow.
-      * **Experience Cloud:** Create a "Build Your Own (Aura)" public site, place the `assetIssueReporter` component on the page, and grant `Create` and `Edit` field-level security permissions to the Guest User Profile.
+      * **Experience Cloud:** 
+        - Create a "Build Your Own (Aura)" public site, place the `assetIssueReporter` component on the page. 
+        - In the Site Guest User profile, grant Apex Class Access to `AssetIssueFacade` (covers both methods).
+        - Time zone: set the Guest User time zone to your target locale (e.g., America/Chicago) to ensure expected date rendering.
+        - Note: The LWC uses a JSON-to-Apex facade; Guest object Edit/file permissions are not required for submission.
 
 ## Testing
 

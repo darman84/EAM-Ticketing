@@ -13,6 +13,7 @@
 ### 3. Key Features & Requirements
 * **Public Intake Portal:** An Experience Cloud site allowing unauthenticated guest users to submit issues.
 * **Mobile-Responsive UI:** A custom Lightning Web Component (LWC) for data entry with client-side validation.
+* **Guest-Safe Submission Path (System Context):** Record creation and file attachment are performed by an Apex facade running in system context. The LWC submits a JSON payload to Apex to avoid Guest CRUD/file permission constraints; lightning-record-edit-form and lightning-file-upload are not used.
 * **Automated Triage:** Declarative routing (Salesforce Flow) assigning records to specific departmental queues (Signage, Water/Sewer, Pavement) based on asset type.
 * **Asynchronous EAM Integration:** Apex-driven REST callouts pushing JSON payloads to the external EAM system without disrupting the user experience.
 * **Bulk Data Resilience:** Architecture must support bulk data operations (up to 100 records per transaction) without exceeding Salesforce governor limits.
