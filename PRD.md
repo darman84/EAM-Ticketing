@@ -12,8 +12,8 @@
 
 ### 3. Key Features & Requirements
 * **Public Intake Portal:** An Experience Cloud site allowing unauthenticated guest users to submit issues.
-* **Mobile-Responsive UI:** A custom Lightning Web Component (LWC) for data entry with client-side validation and extensive custom styling for a premium user experience.
-* **Interactive Map Location:** An intuitive, LWS-compliant Leaflet map integration allowing citizens to accurately pinpoint infrastructure issues without manual coordinate entry.
+* **Mobile-Responsive UI:** A custom Lightning Web Component (LWC) for data entry featuring a light, professional theme with glass-morphism effects, client-side validation, and extensive custom styling for a premium user experience.
+* **Interactive Map Location:** An intuitive, LWS-compliant Leaflet map integration allowing citizens to accurately pinpoint infrastructure issues leveraging container-scoped event listeners and canvas-based markers for stability.
 * **Guest-Safe Submission Path (System Context):** Record creation and file attachment are performed by an Apex facade running in system context. The LWC submits a JSON payload to Apex to avoid Guest CRUD/file permission constraints; lightning-record-edit-form and lightning-file-upload are not used.
 * **Automated Triage:** Declarative routing (Salesforce Flow) assigning records to specific departmental queues (Signage, Water/Sewer, Pavement) based on asset type.
 * **Asynchronous EAM Integration:** Apex-driven REST callouts pushing JSON payloads to the external EAM system without disrupting the user experience.
