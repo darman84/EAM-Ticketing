@@ -6,13 +6,14 @@ The application utilizes a custom Lightning Web Component (LWC) for rapid data e
 
 ## Key Features
   * **Public Intake Portal:** A mobile-responsive LWC form accessible to unauthenticated guest users. The LWC sends a JSON payload to an Apex facade (system context) for record creation and file attachment; it does not use lightning-record-edit-form or lightning-file-upload.
+  * **Interactive Map Location:** Integrates Leaflet.js for graphical location selection. Built to bypass Lightning Web Security (LWS) restrictions via manual DOM container rendering and native JavaScript event listeners, avoiding synthetic event proxy issues.
   * **Automated Triage:** Record-Triggered Flows automatically route new issues to the correct maintenance queue (Signage, Water/Sewer, Pavement) based on the asset type.
   * **Asynchronous Integration:** A Queueable Apex process constructs a JSON payload and performs an HTTP POST callout to an external EAM endpoint without impacting the user's UI transaction.
   * **Bulkified Architecture:** The Apex integration is designed to handle up to 100 simultaneous record insertions without violating Salesforce callout governor limits.
 
 ## Architecture & Technologies
   * **Platform:** Salesforce Service Cloud / Experience Cloud
-  * **Frontend:** Lightning Web Components (LWC), HTML, JavaScript
+  * **Frontend:** Lightning Web Components (LWC), HTML, CSS, JavaScript, Leaflet.js
   * **Backend:** Apex (Queueable, Invocable, HttpCalloutMock)
   * **Automation:** Record-Triggered Flows (After-Save)
   * **Security:** Named Credentials, Guest User Profile FLS

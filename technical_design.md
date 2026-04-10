@@ -39,9 +39,10 @@ The system utilizes a hybrid approach of declarative automation and programmatic
 ### 5. User Interface (Lightning Web Component)
 **Component Name:** `assetIssueReporter`
 * **Framework:** Custom form markup (no `lightning-record-edit-form`).
+* **Map Integration:** Utilizes Leaflet.js for interactive geocoordinate selection. To comply with Lightning Web Security (LWS) restrictions, the map container is entirely managed by manual DOM assignments (`lwc:dom="manual"`) and interacts with click events using `addEventListener` to bypass synthetic LWS event distortion.
 * **Submission Path:** The component gathers inputs (including optional files as base64) and submits a JSON payload to an Apex facade running in system context. The facade creates the `Asset_Issue__c` record and attaches files using `ContentVersion` (`FirstPublishLocationId`).
 * **Validation:** Client-side validation ensures required fields (Asset_Type__c, Severity__c, Description__c) are present; server-side validation is enforced by the facade as well.
-* **UX/Feedback:** On success, displays a success toast and advances to a finish state; reset logic clears form and map selection for subsequent submissions.
+* **UX/Feedback:** Includes a modern UI style, loading states, and on success displays a success state and advances to a finish screen; reset logic clears form and map selection for subsequent submissions.
 * **Availability:** Exposed to `lightning__HomePage`, `lightning__RecordPage`, `lightning__AppPage`, and `lightningCommunity__Page`.
 
 ### 6. Declarative Automation
