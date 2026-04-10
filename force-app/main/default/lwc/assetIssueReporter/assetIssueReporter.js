@@ -152,6 +152,7 @@ export default class AssetIssueReporter extends LightningElement {
 
         // eslint-disable-next-line no-undef
         this.map = L.map(container, {
+            preferCanvas: true,
             zoomControl: true,
             attributionControl: false,
             keyboard: false,
@@ -159,7 +160,8 @@ export default class AssetIssueReporter extends LightningElement {
             scrollWheelZoom: false,
             doubleClickZoom: false,
             boxZoom: false,
-            dragging: true,
+            // Disable dragging by default because Lightning Web Security restricts rangeParent access during Leaflet's drag event selection clearing
+            dragging: false,
             tap: false,
             inertia: false
         }).setView(
@@ -230,13 +232,35 @@ export default class AssetIssueReporter extends LightningElement {
             this.canvasMarker = circle.addTo(this.canvasLayer);
         };
 
+        // Track pointer start to distinguish intentional clicks from drags
+        let startX = 0, startY = 0;
+        const recordStartPos = (e) => {
+            startX = e.touches ? e.touches[0].clientX : e.clientX;
+            startY = e.touches ? e.touches[0].clientY : e.clientY;
+        };
+        container.addEventListener('mousedown', recordStartPos);
+        container.addEventListener('touchstart', recordStartPos, { passive: true });
+
         // Click-to-place: draw canvas marker and update state
-        this.map.on('click', function (e) {
-            if (!e || !e.latlng) return;
-            const lat = e.latlng.lat;
-            const lng = e.latlng.lng;
-            comp.drawCanvasMarker(lat, lng);
-            comp.applyLocation(lat, lng);
+        // Use native DOM event to bypass LWS dropping Leaflet synthetic clicks
+        container.addEventListener('click', function (e) {
+            // If mouse moved more than 4 pixels, consider it a drag/pan, not a click
+            const dx = Math.abs((e.clientX || 0) - startX);
+            const dy = Math.abs((e.clientY || 0) - startY);
+            if (dx > 4 || dy > 4) {
+                return;
+            }
+
+            try {
+                if (!comp.map || !comp.map.mouseEventToLatLng) return;
+                const latlng = comp.map.mouseEventToLatLng(e);
+                if (latlng) {
+                    comp.drawCanvasMarker(latlng.lat, latlng.lng);
+                    comp.applyLocation(latlng.lat, latlng.lng);
+                }
+            } catch (err) {
+                // Ignore unexpected map projection errors
+            }
         });
 
         // Initialize existing lat/lng if present
@@ -444,7 +468,7 @@ export default class AssetIssueReporter extends LightningElement {
     toggleDrag() {
         try {
             if (!this.map) return;
-            const enabled = this.map.options.dragging;
+            const enabled = this.map.dragging.enabled();
             if (enabled) {
                 this.map.dragging.disable();
             } else {
