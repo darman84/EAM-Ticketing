@@ -49,7 +49,6 @@ export default class AssetIssueReporter extends LightningElement {
     leafletLoaded = false;
     mapInitialized = false;
     map;
-    marker;
 
     renderedCallback() {
         if (this.leafletLoaded) {
@@ -353,15 +352,6 @@ export default class AssetIssueReporter extends LightningElement {
     // Legacy image-based marker removed. Use canvas-based drawCanvasMarker everywhere.
     setMarker(lat, lng, fromUserInteraction = false) {
         try {
-            // Remove any legacy marker if present
-            if (this.marker && this.map) {
-                try {
-                    this.map.removeLayer(this.marker);
-                } catch (e) {
-                    // no-op
-                }
-                this.marker = null;
-            }
             // Draw the canvas marker instead
             if (typeof this.drawCanvasMarker === 'function') {
                 this.drawCanvasMarker(lat, lng);
@@ -435,14 +425,15 @@ export default class AssetIssueReporter extends LightningElement {
     }
 
     clearPin() {
-        if (this.marker && this.map) {
+        if (this.canvasMarker && this.canvasLayer) {
             try {
-                this.map.removeLayer(this.marker);
+                this.canvasLayer.removeLayer(this.canvasMarker);
             } catch (e) {
                 // no-op
             }
         }
-        this.marker = null;
+        this.canvasMarker = null;
+
         this.latitude = null;
         this.longitude = null;
         this.mapMarkers = [];
@@ -676,7 +667,9 @@ export default class AssetIssueReporter extends LightningElement {
         this.mapMarkers = [];
         this.latitude = null;
         this.longitude = null;
-        this.marker = null;
+        this.canvasMarker = null;
+        this.mapInitialized = false;
+        this.map = null;
         this.filePreviews = [];
         this.form = { assetType: '', severity: '', description: '', submitterEmail: '', submitterPhone: '' };
         this.showForm = true; // Return to start
