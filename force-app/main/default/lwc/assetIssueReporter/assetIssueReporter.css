@@ -1,8 +1,239 @@
-.map-container .leaflet-host {
+/* Container & Background */
+.premium-container {
+    padding: 2rem 1rem;
+    min-height: 100vh;
+    background: #0f172a;
+    background: radial-gradient(circle at top left, #1e293b, #0f172a);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    overflow: hidden;
+    font-family: 'Inter', 'Roboto', 'Segoe UI', sans-serif;
+    color: #f8fafc;
+}
+
+.background-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.6;
+    z-index: 0;
+    pointer-events: none;
+    animation: float 12s infinite alternate ease-in-out;
+}
+
+.blob-1 {
+    width: 40vw;
+    height: 40vw;
+    background: #3b82f6;
+    /* Blue */
+    top: -10%;
+    left: -10%;
+}
+
+.blob-2 {
+    width: 35vw;
+    height: 35vw;
+    background: #8b5cf6;
+    /* Purple */
+    bottom: -10%;
+    right: -10%;
+    animation-delay: -5s;
+    animation-duration: 18s;
+}
+
+@keyframes float {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    100% {
+        transform: translate(10vw, 5vw) scale(1.1);
+    }
+}
+
+/* Glass Card */
+.glass-card {
+    position: relative;
+    z-index: 1;
     width: 100%;
-    height: 320px;
-    /* explicit pixel height to avoid fractional scaling */
-    min-height: 320px;
+    max-width: 1100px;
+    background: rgba(30, 41, 59, 0.65);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+    animation: slideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    display: flex;
+    flex-direction: column;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Header */
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.75rem 2.5rem;
+    background: rgba(255, 255, 255, 0.02);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.header-icon-wrapper {
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    padding: 1rem;
+    border-radius: 18px;
+    box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.4);
+    display: flex;
+}
+
+.header-icon-wrapper lightning-icon {
+    --lwc-colorTextIconDefault: #ffffff;
+}
+
+.title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin: 0 0 0.25rem 0;
+    letter-spacing: -0.02em;
+}
+
+.subtitle {
+    color: #94a3b8;
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+/* Content Area */
+.card-content {
+    padding: 2.5rem;
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+}
+
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #f1f5f9;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding-bottom: 0.75rem;
+}
+
+.section-icon {
+    --lwc-colorTextIconDefault: #60a5fa;
+}
+
+.divider {
+    border: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 2rem 0;
+}
+
+/* Form Styles & SLDS Overrides */
+.premium-form {
+    --lwc-colorTextDefault: #f8fafc;
+    --lwc-colorTextLabel: #cbd5e1;
+    --lwc-colorBackgroundInput: rgba(15, 23, 42, 0.5);
+    /* Dropdown box standard LWC variables mapping */
+    --lwc-colorBackgroundAlt: #1e293b;
+    --lwc-colorBackgroundRowHover: rgba(59, 130, 246, 0.2);
+    --lwc-colorTextActionActive: #60a5fa;
+    --lwc-colorBorderInput: rgba(255, 255, 255, 0.15);
+    --lwc-borderRadiusInput: 12px;
+    --lwc-colorBackgroundInputHover: rgba(15, 23, 42, 0.8);
+    --lwc-colorBorderInputHover: #60a5fa;
+    --lwc-colorBorderInputActive: #3b82f6;
+    --lwc-shadowButtonFocus: 0 0 0 3px rgba(59, 130, 246, 0.3);
+
+    /* Focus styles for inputs */
+    --lwc-shadowFocus: 0 0 0 3px rgba(59, 130, 246, 0.3);
+
+    /* Button overrides */
+    --lwc-colorBackgroundButtonBrand: linear-gradient(135deg, #3b82f6, #4f46e5);
+    --lwc-colorBackgroundButtonBrandHover: linear-gradient(135deg, #2563eb, #4338ca);
+    --lwc-colorBorderButtonBrand: transparent;
+    --lwc-borderRadiusButton: 12px;
+
+    /* For neutral buttons */
+    --lwc-colorBackgroundButtonDefault: rgba(255, 255, 255, 0.05);
+    --lwc-colorTextButtonDefault: #e2e8f0;
+    --lwc-colorBorderButtonDefault: rgba(255, 255, 255, 0.1);
+    --lwc-colorBackgroundButtonDefaultHover: rgba(255, 255, 255, 0.1);
+    --lwc-colorTextButtonDefaultHover: #ffffff;
+}
+
+.input-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+/* Map Column */
+.map-container-wrapper {
+    background: rgba(15, 23, 42, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.map-container-wrapper:hover {
+    border-color: rgba(96, 165, 250, 0.4);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4);
+}
+
+.action-bar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.action-icons {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: 0.5rem;
+    padding-left: 1rem;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.map-controls-spacer {
+    flex-grow: 1;
+}
+
+.map-inner {
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.leaflet-host {
+    width: 100%;
+    height: 340px;
+    min-height: 340px;
     image-rendering: auto;
     transform: none;
     backface-visibility: hidden;
@@ -11,29 +242,289 @@
     will-change: transform;
 }
 
-/* Map control layout */
-.map-controls {
-    gap: 0.5rem;
+/* Crosshair for Map Center */
+.crosshair-circle {
+    pointer-events: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 24px;
+    height: 24px;
+    margin-left: -12px;
+    margin-top: -12px;
+    border: 2px solid #3b82f6;
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+    z-index: 1000;
+}
+
+.crosshair-x {
+    pointer-events: none;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 0;
+    border-top: 1px dashed rgba(59, 130, 246, 0.5);
+    z-index: 999;
+}
+
+.crosshair-y {
+    pointer-events: none;
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 0;
+    border-left: 1px dashed rgba(59, 130, 246, 0.5);
+    z-index: 999;
+}
+
+/* Glass panel states */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 0.75rem;
+    font-size: 0.95rem;
+    display: flex;
+    justify-content: center;
     align-items: center;
 }
 
-/* Make controls touch friendly on mobile */
-.map-controls .control-col lightning-button,
-.map-controls .control-col lightning-button lightning-primitive-icon {
-    --lwc-button-padding-vertical: 0.5rem;
-    --lwc-button-padding-horizontal: 0.75rem;
+.empty-state-message {
+    color: #94a3b8;
 }
 
-/* Hide controls on very small screens to maximize map area */
-@media only screen and (max-width: 420px) {
-    .map-controls {
-        display: none;
+.success-state-message {
+    color: #34d399;
+    background: rgba(16, 185, 129, 0.08);
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.opacity-50 {
+    opacity: 0.6;
+}
+
+/* Upload Section */
+.upload-section {
+    margin-top: 1.5rem;
+    padding: 1.5rem 1.5rem;
+    background: rgba(15, 23, 42, 0.3);
+    border-radius: 16px;
+    border: 1px dashed rgba(148, 163, 184, 0.3);
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.upload-section:hover {
+    border-color: #60a5fa;
+    background: rgba(59, 130, 246, 0.05);
+}
+
+.upload-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.upload-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #f1f5f9;
+}
+
+.upload-input-container {
+    display: flex;
+    justify-content: center;
+    margin: 0.5rem 0;
+    /* Force internal dropzone text to read nicely on dark */
+    --lwc-colorTextDefault: #cbd5e1;
+}
+
+.upload-desc {
+    color: #94a3b8;
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+.file-list {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 0;
+    list-style: none;
+    position: relative;
+    z-index: 20;
+    /* above the hidden input so we can click them if needed */
+    justify-content: center;
+}
+
+.file-item {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    color: #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    animation: scaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    backdrop-filter: blur(8px);
+}
+
+.file-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.file-name {
+    font-size: 0.85rem;
+    font-weight: 500;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.file-size {
+    color: #94a3b8;
+    font-size: 0.7rem;
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
     }
 }
 
-/* Slight spacing for desktop */
-@media only screen and (min-width: 421px) {
-    .map-controls .control-col {
-        margin-right: 0.5rem;
+/* Submit Row */
+.submit-row {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.submit-btn {
+    animation: pulseShadow 2.5s infinite;
+}
+
+@keyframes pulseShadow {
+    0% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 12px rgba(59, 130, 246, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+    }
+}
+
+/* Success View */
+.success-view {
+    text-align: center;
+    padding: 4rem 2rem;
+    animation: popIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1.1) forwards;
+}
+
+.success-icon-wrapper {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #10b981, #059669);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem auto;
+    box-shadow: 0 15px 30px -10px rgba(16, 185, 129, 0.6);
+}
+
+.success-icon-wrapper lightning-icon {
+    --lwc-colorTextIconDefault: #ffffff;
+}
+
+.success-title {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.02em;
+}
+
+.success-message {
+    color: #94a3b8;
+    margin: 0 auto 2.5rem auto;
+    font-size: 1.1rem;
+    max-width: 550px;
+    line-height: 1.6;
+}
+
+.success-button {
+    --lwc-colorBackgroundButtonBrand: linear-gradient(135deg, #10b981, #059669);
+    --lwc-colorBackgroundButtonBrandHover: linear-gradient(135deg, #059669, #047857);
+}
+
+@keyframes popIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .content-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .glass-card {
+        border-radius: 16px;
+    }
+
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1.5rem;
+    }
+
+    .card-content {
+        padding: 1.5rem;
+    }
+
+    .action-bar {
+        justify-content: center;
+    }
+
+    .map-controls-spacer {
+        display: none;
+    }
+
+    .submit-row {
+        justify-content: center;
+    }
+
+    .submit-btn {
+        width: 100%;
     }
 }

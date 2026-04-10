@@ -1,123 +1,161 @@
 <template>
-    <lightning-card title="Report Infrastructure Issue" icon-name="custom:custom85">
-        <div class="slds-var-p-around_medium">
+    <div class="premium-container slds-is-relative">
+        <div class="background-blob blob-1"></div>
+        <div class="background-blob blob-2"></div>
 
-            <template if:true={showForm}>
-                <!-- Custom client form replacing lightning-record-edit-form for guest constraints -->
-                <lightning-layout multiple-rows>
-                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                        <lightning-combobox name="assetType" label="Asset Type" value={form.assetType}
-                            placeholder="Select Asset Type" options={assetTypeOptions} required
-                            onchange={onFieldChange}>
-                        </lightning-combobox>
+        <div class="glass-card">
+            <header class="card-header">
+                <div class="header-icon-wrapper">
+                    <lightning-icon icon-name="custom:custom85" size="medium" variant="inverse"></lightning-icon>
+                </div>
+                <div class="header-text">
+                    <h1 class="title">Report Infrastructure Issue</h1>
+                    <p class="subtitle">Quickly notify the city of pavement, signage, or utility concerns.</p>
+                </div>
+            </header>
 
-                        <lightning-combobox name="severity" label="Severity" value={form.severity}
-                            placeholder="Select Severity" options={severityOptions} required onchange={onFieldChange}>
-                        </lightning-combobox>
+            <div class="card-content premium-form">
+                <template if:true={showForm}>
+                    <div class="content-grid">
+                        <!-- Left Column: Form Fields -->
+                        <div class="form-column">
+                            <h2 class="section-title">
+                                <lightning-icon icon-name="utility:edit_form" size="x-small" class="section-icon slds-m-right_x-small"></lightning-icon>
+                                Issue Details
+                            </h2>
+                            <div class="input-stack">
+                                <lightning-combobox name="assetType" label="Asset Type" value={form.assetType}
+                                    placeholder="Select Asset Type" options={assetTypeOptions} required
+                                    onchange={onFieldChange}>
+                                </lightning-combobox>
 
-                        <lightning-textarea name="description" label="Description" value={form.description} required
-                            onchange={onFieldChange}>
-                        </lightning-textarea>
+                                <lightning-combobox name="severity" label="Severity" value={form.severity}
+                                    placeholder="Select Severity" options={severityOptions} required onchange={onFieldChange}>
+                                </lightning-combobox>
 
-                        <lightning-input type="email" name="submitterEmail" label="Submitter Email"
-                            value={form.submitterEmail} onchange={onFieldChange}>
-                        </lightning-input>
-
-                        <lightning-input type="tel" name="submitterPhone" label="Submitter Phone"
-                            value={form.submitterPhone} onchange={onFieldChange}>
-                        </lightning-input>
-                    </lightning-layout-item>
-
-                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                        <div class="slds-var-p-bottom_small slds-grid slds-gutters slds-wrap map-controls">
-                            <div class="slds-col control-col">
-                                <lightning-button icon-name="utility:checkin" label="Use My Current Location"
-                                    onclick={getLocation} alternative-text="Use my current location"
-                                    title="Use my current location"></lightning-button>
+                                <lightning-textarea name="description" label="Description" value={form.description} required
+                                    onchange={onFieldChange} placeholder="Provide details about the issue...">
+                                </lightning-textarea>
                             </div>
-                            <div class="slds-col control-col">
-                                <lightning-button icon-name="utility:target_mode" label="Set Pin at Center"
-                                    variant="neutral" onclick={setPinAtCenter} alternative-text="Set pin at map center"
-                                    title="Set pin at map center"></lightning-button>
-                            </div>
-                            <div class="slds-col control-col">
-                                <lightning-button icon-name="utility:add" label="Zoom In" variant="neutral"
-                                    onclick={zoomIn} alternative-text="Zoom in" title="Zoom in"></lightning-button>
-                            </div>
-                            <div class="slds-col control-col">
-                                <lightning-button icon-name="utility:dash" label="Zoom Out" variant="neutral"
-                                    onclick={zoomOut} alternative-text="Zoom out" title="Zoom out"></lightning-button>
-                            </div>
-                            <div class="slds-col control-col">
-                                <lightning-button icon-name="utility:refresh" label="Toggle Drag" variant="neutral"
-                                    onclick={toggleDrag} alternative-text="Toggle map dragging"
-                                    title="Toggle map dragging"></lightning-button>
-                            </div>
-                            <div class="slds-col control-col">
-                                <lightning-button icon-name="utility:location" label="Clear Pin" variant="neutral"
-                                    onclick={clearPin} alternative-text="Clear selected pin"
-                                    title="Clear selected pin"></lightning-button>
+
+                            <hr class="divider"/>
+
+                            <h2 class="section-title">
+                                <lightning-icon icon-name="utility:user" size="x-small" class="section-icon slds-m-right_x-small"></lightning-icon>
+                                Contact Info (Optional)
+                            </h2>
+                            <div class="input-stack">
+                                <lightning-input type="email" name="submitterEmail" label="Email Address"
+                                    value={form.submitterEmail} onchange={onFieldChange} placeholder="For status updates">
+                                </lightning-input>
+
+                                <lightning-input type="tel" name="submitterPhone" label="Phone Number"
+                                    value={form.submitterPhone} onchange={onFieldChange} placeholder="(XXX) XXX-XXXX">
+                                </lightning-input>
                             </div>
                         </div>
 
-                        <!-- Interactive Leaflet map container with crosshair overlay for center-set UX -->
-                        <div class="map-container" style="position: relative;">
-                            <div data-map lwc:dom="manual" class="leaflet-host"></div>
-                            <!-- Crosshair overlay -->
-                            <div
-                                style="pointer-events:none; position:absolute; top:50%; left:50%; width:24px; height:24px; margin-left:-12px; margin-top:-12px; border:2px solid #1b96ff; border-radius:50%; box-shadow:0 0 0 2px rgba(27,150,255,0.2);">
+                        <!-- Right Column: Location & Files -->
+                        <div class="map-column">
+                            <h2 class="section-title">
+                                <lightning-icon icon-name="utility:location" size="x-small" class="section-icon slds-m-right_x-small"></lightning-icon>
+                                Location Pinpoint
+                            </h2>
+                            
+                            <div class="map-container-wrapper">
+                                <div class="action-bar">
+                                    <lightning-button icon-name="utility:checkin" label="My Location"
+                                        onclick={getLocation} title="Use my current location"></lightning-button>
+                                    <lightning-button icon-name="utility:target_mode" label="Set Pin"
+                                        variant="neutral" onclick={setPinAtCenter} title="Set pin at map center"></lightning-button>
+                                    
+                                    <div class="action-icons">
+                                        <lightning-button-icon icon-name="utility:add" variant="border-filled"
+                                            onclick={zoomIn} alternative-text="Zoom in"></lightning-button-icon>
+                                        <lightning-button-icon icon-name="utility:dash" variant="border-filled"
+                                            onclick={zoomOut} alternative-text="Zoom out"></lightning-button-icon>
+                                    </div>
+                                    
+                                    <div class="map-controls-spacer"></div>
+                                    
+                                    <lightning-button icon-name="utility:delete" label="Clear" variant="neutral"
+                                        onclick={clearPin} title="Clear selected pin"></lightning-button>
+                                </div>
+
+                                <!-- Interactive Leaflet map container with crosshair overlay -->
+                                <div class="map-inner">
+                                    <div data-map lwc:dom="manual" class="leaflet-host"></div>
+                                    <!-- Crosshair UI -->
+                                    <div class="crosshair-circle"></div>
+                                    <div class="crosshair-x"></div>
+                                    <div class="crosshair-y"></div>
+                                </div>
                             </div>
-                            <div
-                                style="pointer-events:none; position:absolute; top:50%; left:0; right:0; height:0; border-top:1px dashed rgba(27,150,255,0.5);">
+                            
+                            <!-- Static Preview / Helper Message -->
+                            <div class="location-preview slds-m-top_small">
+                                <template if:false={mapMarkers.length}>
+                                    <div class="glass-panel empty-state-message">
+                                        <lightning-icon icon-name="utility:info_alt" size="x-small" class="opacity-50 slds-m-right_x-small" variant="inverse"></lightning-icon>
+                                        Select a location on the map to continue.
+                                    </div>
+                                </template>
+                                <template if:true={mapMarkers.length}>
+                                    <div class="glass-panel success-state-message">
+                                        <lightning-icon icon-name="utility:success" size="x-small" variant="inverse" class="slds-m-right_x-small"></lightning-icon>
+                                        Location successfully recorded.
+                                    </div>
+                                </template>
                             </div>
-                            <div
-                                style="pointer-events:none; position:absolute; left:50%; top:0; bottom:0; width:0; border-left:1px dashed rgba(27,150,255,0.5);">
+
+                            <div class="upload-section">
+                                <div class="upload-header slds-m-bottom_small">
+                                    <lightning-icon icon-name="utility:upload" size="small" variant="inverse" class="slds-m-right_x-small"></lightning-icon>
+                                    <span class="upload-title">Photo Evidence</span>
+                                </div>
+                                
+                                <div class="upload-input-container">
+                                    <lightning-input type="file" name="files" accept=".jpg,.jpeg,.png" multiple
+                                        onchange={onFilesSelected} variant="label-hidden">
+                                    </lightning-input>
+                                </div>
+                                <p class="upload-desc slds-m-top_x-small">Max 5 photos (.jpg, .png)</p>
+                                
+                                <template if:true={filePreviews.length}>
+                                    <ul class="file-list">
+                                        <template for:each={filePreviews} for:item="f">
+                                            <li key={f.name} class="file-item">
+                                                <lightning-icon icon-name="doctype:image" size="small" variant="inverse"></lightning-icon>
+                                                <div class="file-info">
+                                                    <span class="file-name">{f.name}</span>
+                                                    <span class="file-size">{f.sizeLabel}</span>
+                                                </div>
+                                            </li>
+                                        </template>
+                                    </ul>
+                                </template>
                             </div>
                         </div>
-
-                        <!-- Preview using lightning-map kept in sync -->
-                        <template if:true={mapMarkers.length}>
-                            <div class="slds-var-m-top_small">
-                                <lightning-map map-markers={mapMarkers} zoom-level="15"></lightning-map>
-                            </div>
-                        </template>
-                        <template if:false={mapMarkers.length}>
-                            <div class="slds-box slds-text-align_center slds-text-color_weak">Use the interactive
-                                map above to drop/drag a pin, or click “Use My Current Location”.</div>
-                        </template>
-                    </lightning-layout-item>
-                </lightning-layout>
-
-                <!-- Client-side file picker; files are read as base64 and sent via Apex facade -->
-                <div class="slds-var-m-top_medium">
-                    <lightning-input type="file" name="files" label="Attach Images" accept=".jpg,.jpeg,.png" multiple
-                        onchange={onFilesSelected}>
-                    </lightning-input>
-                    <template if:true={filePreviews.length}>
-                        <ul class="slds-list_dotted slds-var-m-top_small">
-                            <template for:each={filePreviews} for:item="f">
-                                <li key={f.name}>{f.name} ({f.sizeLabel})</li>
-                            </template>
-                        </ul>
-                    </template>
-                </div>
-
-                <div class="slds-var-m-top_medium slds-text-align_center">
-                    <lightning-button variant="brand" label="Submit Issue" onclick={submitIssue}
-                        disabled={submitting}></lightning-button>
-                </div>
-            </template>
-
-            <template if:true={showUpload}>
-                <div class="slds-text-align_center">
-                    <p class="slds-text-heading_small slds-var-m-bottom_medium">Issue Logged!</p>
-                    <div class="slds-var-m-top_large">
-                        <lightning-button variant="success" label="Finish & Return"
-                            onclick={resetWizard}></lightning-button>
                     </div>
-                </div>
-            </template>
 
+                    <div class="submit-row">
+                        <lightning-button variant="brand" label="Submit Infrastructure Issue" onclick={submitIssue}
+                            disabled={submitting} class="submit-btn" icon-name="utility:send" icon-position="right"></lightning-button>
+                    </div>
+                </template>
+
+                <template if:true={showUpload}>
+                    <div class="success-view">
+                        <div class="success-icon-wrapper">
+                            <lightning-icon icon-name="utility:check" size="large" variant="inverse"></lightning-icon>
+                        </div>
+                        <h2 class="success-title">Issue Reported Successfully!</h2>
+                        <p class="success-message">Thank you for helping keep the city functional. Your report has been dispatched to the appropriate department.</p>
+                        <lightning-button variant="brand" label="Report Another Issue"
+                            onclick={resetWizard} class="success-button" icon-name="utility:add"></lightning-button>
+                    </div>
+                </template>
+            </div>
         </div>
-    </lightning-card>
+    </div>
 </template>

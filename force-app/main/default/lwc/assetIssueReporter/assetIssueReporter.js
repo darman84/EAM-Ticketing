@@ -86,6 +86,8 @@ export default class AssetIssueReporter extends LightningElement {
                     return;
                 }
 
+                // Original Leaflet init handled successfully
+
                 const container = this.template.querySelector('[data-map]');
                 if (!container) {
                     this.dispatchEvent(
@@ -234,12 +236,57 @@ export default class AssetIssueReporter extends LightningElement {
 
         // Track pointer start to distinguish intentional clicks from drags
         let startX = 0, startY = 0;
-        const recordStartPos = (e) => {
-            startX = e.touches ? e.touches[0].clientX : e.clientX;
-            startY = e.touches ? e.touches[0].clientY : e.clientY;
+        let isDraggingMap = false;
+        let lastPanX = 0, lastPanY = 0;
+
+        const handleDown = (e) => {
+            // Ignore multi-touch for custom simple pan
+            if (e.touches && e.touches.length > 1) return;
+            
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            
+            startX = clientX;
+            startY = clientY;
+            lastPanX = clientX;
+            lastPanY = clientY;
+            isDraggingMap = true;
         };
-        container.addEventListener('mousedown', recordStartPos);
-        container.addEventListener('touchstart', recordStartPos, { passive: true });
+
+        const handleMove = (e) => {
+            if (!isDraggingMap || !comp.map) return;
+            
+            e.preventDefault(); // Prevent native browser scrolling/selection
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            
+            const dx = clientX - lastPanX;
+            const dy = clientY - lastPanY;
+            
+            if (dx !== 0 || dy !== 0) {
+                // Pan by delta pixels smoothly
+                comp.map.panBy([-dx, -dy], { animate: false });
+            }
+            
+            lastPanX = clientX;
+            lastPanY = clientY;
+        };
+
+        const handleUp = () => {
+            isDraggingMap = false;
+        };
+
+        // Attach custom drag listeners to bypass Leaflet's crashing native LWS selection hooks
+        // Bind exclusively to container rather than global window/document to ensure strict LWS compliance
+        container.addEventListener('mousedown', handleDown);
+        container.addEventListener('mousemove', handleMove);
+        container.addEventListener('mouseup', handleUp);
+        container.addEventListener('mouseleave', handleUp);
+        
+        container.addEventListener('touchstart', handleDown);
+        container.addEventListener('touchmove', handleMove);
+        container.addEventListener('touchend', handleUp);
+        container.addEventListener('touchcancel', handleUp);
 
         // Click-to-place: draw canvas marker and update state
         // Use native DOM event to bypass LWS dropping Leaflet synthetic clicks
@@ -465,25 +512,11 @@ export default class AssetIssueReporter extends LightningElement {
         }
     }
 
-    toggleDrag() {
-        try {
-            if (!this.map) return;
-            const enabled = this.map.dragging.enabled();
-            if (enabled) {
-                this.map.dragging.disable();
-            } else {
-                this.map.dragging.enable();
-            }
-            this.dispatchEvent(new ShowToastEvent({ title: 'Map', message: `Dragging ${enabled ? 'disabled' : 'enabled'}`, variant: 'info' }));
-        } catch (e) {
-            // no-op
-        }
-    }
 
     // Accessibility helpers: add ARIA labels to controls for screen readers (no DOM changes here; buttons already have titles/alternative-text)
     setControlAria() {
         try {
-            const controls = this.template.querySelectorAll('.map-controls lightning-button');
+            const controls = this.template.querySelectorAll('.action-bar lightning-button, .action-bar lightning-button-icon');
             controls.forEach((btn) => {
                 try {
                     // ensure accessible name
