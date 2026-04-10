@@ -2,21 +2,21 @@
 .premium-container {
     padding: 2rem 1rem;
     min-height: 100vh;
-    background: #0f172a;
-    background: radial-gradient(circle at top left, #1e293b, #0f172a);
+    background: #f1f5f9;
+    background: radial-gradient(circle at top left, #ffffff, #f1f5f9);
     display: flex;
     justify-content: center;
     align-items: flex-start;
     overflow: hidden;
     font-family: 'Inter', 'Roboto', 'Segoe UI', sans-serif;
-    color: #f8fafc;
+    color: #0f172a;
 }
 
 .background-blob {
     position: absolute;
     border-radius: 50%;
     filter: blur(100px);
-    opacity: 0.6;
+    opacity: 0.3;
     z-index: 0;
     pointer-events: none;
     animation: float 12s infinite alternate ease-in-out;
@@ -58,12 +58,12 @@
     z-index: 1;
     width: 100%;
     max-width: 1100px;
-    background: rgba(30, 41, 59, 0.65);
+    background: rgba(255, 255, 255, 0.65);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.4);
     border-radius: 24px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+    box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.5) inset;
     animation: slideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     display: flex;
     flex-direction: column;
@@ -87,8 +87,8 @@
     align-items: center;
     gap: 1.5rem;
     padding: 1.75rem 2.5rem;
-    background: rgba(255, 255, 255, 0.02);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.4);
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
 }
 
 .header-icon-wrapper {
@@ -106,13 +106,13 @@
 .title {
     font-size: 1.75rem;
     font-weight: 700;
-    color: #f8fafc;
+    color: #0f172a;
     margin: 0 0 0.25rem 0;
     letter-spacing: -0.02em;
 }
 
 .subtitle {
-    color: #94a3b8;
+    color: #475569;
     margin: 0;
     font-size: 0.95rem;
 }
@@ -131,38 +131,38 @@
 .section-title {
     font-size: 1.1rem;
     font-weight: 600;
-    color: #f1f5f9;
+    color: #1e293b;
     margin-bottom: 1.25rem;
     display: flex;
     align-items: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
     padding-bottom: 0.75rem;
 }
 
 .section-icon {
-    --lwc-colorTextIconDefault: #60a5fa;
+    --lwc-colorTextIconDefault: #2563eb;
 }
 
 .divider {
     border: 0;
     height: 1px;
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(15, 23, 42, 0.08);
     margin: 2rem 0;
 }
 
 /* Form Styles & SLDS Overrides */
 .premium-form {
-    --lwc-colorTextDefault: #f8fafc;
-    --lwc-colorTextLabel: #cbd5e1;
-    --lwc-colorBackgroundInput: rgba(15, 23, 42, 0.5);
+    --lwc-colorTextDefault: #0f172a;
+    --lwc-colorTextLabel: #475569;
+    --lwc-colorBackgroundInput: #ffffff;
     /* Dropdown box standard LWC variables mapping */
-    --lwc-colorBackgroundAlt: #1e293b;
-    --lwc-colorBackgroundRowHover: rgba(59, 130, 246, 0.2);
-    --lwc-colorTextActionActive: #60a5fa;
-    --lwc-colorBorderInput: rgba(255, 255, 255, 0.15);
+    --lwc-colorBackgroundAlt: #ffffff;
+    --lwc-colorBackgroundRowHover: rgba(59, 130, 246, 0.1);
+    --lwc-colorTextActionActive: #2563eb;
+    --lwc-colorBorderInput: rgba(15, 23, 42, 0.2);
     --lwc-borderRadiusInput: 12px;
-    --lwc-colorBackgroundInputHover: rgba(15, 23, 42, 0.8);
-    --lwc-colorBorderInputHover: #60a5fa;
+    --lwc-colorBackgroundInputHover: #f8fafc;
+    --lwc-colorBorderInputHover: #3b82f6;
     --lwc-colorBorderInputActive: #3b82f6;
     --lwc-shadowButtonFocus: 0 0 0 3px rgba(59, 130, 246, 0.3);
 
@@ -176,11 +176,11 @@
     --lwc-borderRadiusButton: 12px;
 
     /* For neutral buttons */
-    --lwc-colorBackgroundButtonDefault: rgba(255, 255, 255, 0.05);
-    --lwc-colorTextButtonDefault: #e2e8f0;
-    --lwc-colorBorderButtonDefault: rgba(255, 255, 255, 0.1);
-    --lwc-colorBackgroundButtonDefaultHover: rgba(255, 255, 255, 0.1);
-    --lwc-colorTextButtonDefaultHover: #ffffff;
+    --lwc-colorBackgroundButtonDefault: #ffffff;
+    --lwc-colorTextButtonDefault: #1e293b;
+    --lwc-colorBorderButtonDefault: rgba(15, 23, 42, 0.2);
+    --lwc-colorBackgroundButtonDefaultHover: #f1f5f9;
+    --lwc-colorTextButtonDefaultHover: #0f172a;
 }
 
 .input-stack {
@@ -191,8 +191,8 @@
 
 /* Map Column */
 .map-container-wrapper {
-    background: rgba(15, 23, 42, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(15, 23, 42, 0.1);
     border-radius: 16px;
     padding: 0.75rem;
     transition: all 0.3s ease;
@@ -216,7 +216,7 @@
     gap: 0.5rem;
     margin-left: 0.5rem;
     padding-left: 1rem;
-    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    border-left: 1px solid rgba(15, 23, 42, 0.1);
 }
 
 .map-controls-spacer {
@@ -227,7 +227,7 @@
     border-radius: 12px;
     overflow: hidden;
     position: relative;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(15, 23, 42, 0.1);
 }
 
 .leaflet-host {
@@ -282,8 +282,8 @@
 
 /* Glass panel states */
 .glass-panel {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(15, 23, 42, 0.08);
     border-radius: 12px;
     padding: 0.75rem;
     font-size: 0.95rem;
@@ -293,13 +293,21 @@
 }
 
 .empty-state-message {
-    color: #94a3b8;
+    color: #64748b;
+}
+
+.empty-state-message lightning-icon {
+    --lwc-colorTextIconDefault: #64748b;
 }
 
 .success-state-message {
-    color: #34d399;
-    background: rgba(16, 185, 129, 0.08);
-    border-color: rgba(16, 185, 129, 0.3);
+    color: #059669;
+    background: rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.2);
+}
+
+.success-state-message lightning-icon {
+    --lwc-colorTextIconDefault: #059669;
 }
 
 .opacity-50 {
@@ -310,9 +318,9 @@
 .upload-section {
     margin-top: 1.5rem;
     padding: 1.5rem 1.5rem;
-    background: rgba(15, 23, 42, 0.3);
+    background: rgba(255, 255, 255, 0.5);
     border-radius: 16px;
-    border: 1px dashed rgba(148, 163, 184, 0.3);
+    border: 1px dashed rgba(15, 23, 42, 0.2);
     transition: all 0.3s ease;
     text-align: center;
 }
@@ -331,7 +339,11 @@
 .upload-title {
     font-size: 1.1rem;
     font-weight: 600;
-    color: #f1f5f9;
+    color: #1e293b;
+}
+
+.upload-header lightning-icon {
+    --lwc-colorTextIconDefault: #475569;
 }
 
 .upload-input-container {
@@ -339,11 +351,11 @@
     justify-content: center;
     margin: 0.5rem 0;
     /* Force internal dropzone text to read nicely on dark */
-    --lwc-colorTextDefault: #cbd5e1;
+    --lwc-colorTextDefault: #475569;
 }
 
 .upload-desc {
-    color: #94a3b8;
+    color: #64748b;
     font-size: 0.85rem;
     margin: 0;
 }
@@ -362,16 +374,17 @@
 }
 
 .file-item {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.1);
     padding: 0.5rem 1rem;
     border-radius: 20px;
-    color: #e2e8f0;
+    color: #0f172a;
     display: flex;
     align-items: center;
     gap: 0.75rem;
     animation: scaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     backdrop-filter: blur(8px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
 .file-info {
@@ -390,7 +403,7 @@
 }
 
 .file-size {
-    color: #94a3b8;
+    color: #64748b;
     font-size: 0.7rem;
 }
 
@@ -410,7 +423,7 @@
 .submit-row {
     margin-top: 2rem;
     padding-top: 1.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid rgba(15, 23, 42, 0.08);
     display: flex;
     justify-content: flex-end;
 }
@@ -459,13 +472,13 @@
 .success-title {
     font-size: 2.25rem;
     font-weight: 700;
-    color: #f8fafc;
+    color: #0f172a;
     margin-bottom: 0.75rem;
     letter-spacing: -0.02em;
 }
 
 .success-message {
-    color: #94a3b8;
+    color: #475569;
     margin: 0 auto 2.5rem auto;
     font-size: 1.1rem;
     max-width: 550px;

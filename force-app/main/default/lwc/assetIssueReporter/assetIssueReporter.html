@@ -96,13 +96,13 @@
                             <div class="location-preview slds-m-top_small">
                                 <template if:false={mapMarkers.length}>
                                     <div class="glass-panel empty-state-message">
-                                        <lightning-icon icon-name="utility:info_alt" size="x-small" class="opacity-50 slds-m-right_x-small" variant="inverse"></lightning-icon>
+                                        <lightning-icon icon-name="utility:info_alt" size="x-small" class="opacity-50 slds-m-right_x-small"></lightning-icon>
                                         Select a location on the map to continue.
                                     </div>
                                 </template>
                                 <template if:true={mapMarkers.length}>
                                     <div class="glass-panel success-state-message">
-                                        <lightning-icon icon-name="utility:success" size="x-small" variant="inverse" class="slds-m-right_x-small"></lightning-icon>
+                                        <lightning-icon icon-name="utility:success" size="x-small" class="slds-m-right_x-small"></lightning-icon>
                                         Location successfully recorded.
                                     </div>
                                 </template>
@@ -110,7 +110,7 @@
 
                             <div class="upload-section">
                                 <div class="upload-header slds-m-bottom_small">
-                                    <lightning-icon icon-name="utility:upload" size="small" variant="inverse" class="slds-m-right_x-small"></lightning-icon>
+                                    <lightning-icon icon-name="utility:upload" size="small" class="slds-m-right_x-small"></lightning-icon>
                                     <span class="upload-title">Photo Evidence</span>
                                 </div>
                                 
@@ -125,7 +125,7 @@
                                     <ul class="file-list">
                                         <template for:each={filePreviews} for:item="f">
                                             <li key={f.name} class="file-item">
-                                                <lightning-icon icon-name="doctype:image" size="small" variant="inverse"></lightning-icon>
+                                                <lightning-icon icon-name="doctype:image" size="small"></lightning-icon>
                                                 <div class="file-info">
                                                     <span class="file-name">{f.name}</span>
                                                     <span class="file-size">{f.sizeLabel}</span>
