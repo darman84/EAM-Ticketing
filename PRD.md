@@ -1,35 +1,25 @@
-# Product Requirements Document (PRD)
-## Salesforce-to-EAM Infrastructure Ticketing System
+# Product Requirements Document
 
-### 1. Executive Summary
-**Objective:** Modernize municipal public works requests by bridging citizen/field-reported infrastructure issues in Salesforce Service Cloud with backend Enterprise Asset Management (EAM) systems.
-**Value Proposition:** Reduces manual data entry, automates departmental routing, and provides real-time API integration with EAM endpoints.
+## Goal
+* **What:** A Salesforce-to-EAM Infrastructure Ticketing System using Experience Cloud, Lightning Web Components, and asynchronous Apex integration.
+* **Why:** To modernize municipal public works requests by bridging citizen/field-reported infrastructure issues in Salesforce with backend Enterprise Asset Management (EAM) systems, reducing manual data entry and automating routing.
 
-### 2. Target Audience
-* **Citizens & Field Techs:** Submit infrastructure issues via a mobile-responsive interface.
-* **Call Center Agents:** Log issues internally on behalf of callers.
-* **Public Works Staff (OpenGov Cartegraph):** Receive routed, formatted tickets seamlessly in their native system.
+## Requirements
+### Must Have
+* Public Intake Portal via an Experience Cloud site for unauthenticated guest users.
+* Mobile-Responsive UI with a custom Lightning Web Component (LWC) featuring client-side validation and a premium light theme.
+* Interactive Map Location using LWS-compliant Leaflet map integration with canvas-based markers.
+* Guest-Safe Submission Path using an Apex facade running in system context to avoid CRUD/file permission constraints.
+* Automated Triage via Salesforce Flow to route records to specific departmental queues (Signage, Water/Sewer, Pavement).
+* Asynchronous EAM Integration via Apex REST callouts for pushing JSON payloads without disrupting user experience.
+* Bulk Data Resilience to support operations of up to 100 records per transaction without exceeding governor limits.
 
-### 3. Key Features & Requirements
-* **Public Intake Portal:** An Experience Cloud site allowing unauthenticated guest users to submit issues.
-* **Mobile-Responsive UI:** A custom Lightning Web Component (LWC) for data entry featuring a light, professional theme with glass-morphism effects, client-side validation, and extensive custom styling for a premium user experience.
-* **Interactive Map Location:** An intuitive, LWS-compliant Leaflet map integration allowing citizens to accurately pinpoint infrastructure issues leveraging container-scoped event listeners and canvas-based markers for stability.
-* **Guest-Safe Submission Path (System Context):** Record creation and file attachment are performed by an Apex facade running in system context. The LWC submits a JSON payload to Apex to avoid Guest CRUD/file permission constraints; lightning-record-edit-form and lightning-file-upload are not used.
-* **Automated Triage:** Declarative routing (Salesforce Flow) assigning records to specific departmental queues (Signage, Water/Sewer, Pavement) based on asset type.
-* **Asynchronous EAM Integration:** Apex-driven REST callouts pushing JSON payloads to the external EAM system without disrupting the user experience.
-* **Bulk Data Resilience:** Architecture must support bulk data operations (up to 100 records per transaction) without exceeding Salesforce governor limits.
+### Nice to Have
+* Bi-directional syncing (EAM to Salesforce updates) - Currently out of scope.
+* Authenticated citizen portals (Citizen login/accounts) - Currently out of scope.
+* Integration with a live production EAM (currently utilizing a mock endpoint).
 
-### 4. User Stories
-* **US01:** As a citizen, I need a public, mobile-friendly web form to report an issue so that the city is notified immediately.
-* **US02:** As a dispatcher, I need issues automatically routed to the correct maintenance queue (e.g., Pavement & Streets) so that I do not have to manually triage incoming tickets.
-* **US03:** As an IT administrator, I need the Salesforce system to automatically sync new tickets to our external EAM system and log the success/failure status.
-
-### 5. Out of Scope
-* Bi-directional syncing (EAM to Salesforce updates).
-* Authenticated citizen portals (Citizen login/accounts).
-* Integration with a live production EAM (utilizing a mock endpoint for Proof-of-Concept).
-
-### 6. Metrics for Success
-* **System Performance:** 100% of LWC submissions process without UI latency.
-* **Integration Reliability:** Automated integration handles 100-record bulk inserts without limit exceptions.
-* **Code Quality:** Apex test classes maintain >75% coverage (targeting 100%).
+## User Flow
+1. Citizen or field tech submits an infrastructure issue via the mobile-friendly public web form (LWC), including dropping a pin on an interactive Leaflet map.
+2. The system's Apex facade safely records the issue and any file attachments in system context.
+3. Salesforce automatically routes the ticket to the correct maintenance queue based on asset type, while a background Queueable Apex job syncs the ticket to the external EAM system and updates the success/failure status.
