@@ -18,8 +18,7 @@ export default class AssetIssueReporter extends LightningElement {
     assetType: "",
     severity: "",
     description: "",
-    submitterEmail: "",
-    submitterPhone: ""
+    submitterEmail: ""
   };
   @track filePreviews = [];
   submitting = false;
@@ -695,13 +694,6 @@ export default class AssetIssueReporter extends LightningElement {
               : "";
           return s || null;
         })(),
-        submitterPhone: (() => {
-          const s =
-            this.form && typeof this.form.submitterPhone === "string"
-              ? this.form.submitterPhone.trim()
-              : "";
-          return s || null;
-        })(),
         files
       };
 
@@ -766,8 +758,7 @@ export default class AssetIssueReporter extends LightningElement {
       assetType: "",
       severity: "",
       description: "",
-      submitterEmail: "",
-      submitterPhone: ""
+      submitterEmail: ""
     };
     this.showForm = true; // Return to start
   }

@@ -5,7 +5,7 @@
  *
  * Usage (LWC):
  *  import createIssue from '@salesforce/apex/AssetIssueFacade.createIssueWithFiles';
- *  const req = { assetType, severity, description, latitude, longitude, submitterEmail, submitterPhone, files: [{fileName, contentType, base64Data}] };
+ *  const req = { assetType, severity, description, latitude, longitude, submitterEmail, files: [{fileName, contentType, base64Data}] };
  *  const res = await createIssue({ req });
  *
  * Security:
@@ -74,8 +74,6 @@ public without sharing class AssetIssueFacade {
     @AuraEnabled
     public String submitterEmail;
     @AuraEnabled
-    public String submitterPhone;
-    @AuraEnabled
     public List<FilePart> files;
 
     public CreateIssueRequest() {
@@ -132,7 +130,6 @@ public without sharing class AssetIssueFacade {
       // These fields are referenced in the component; map them if they exist in the org.
       try {
         issue.put('Submitter_Email__c', req.submitterEmail);
-        issue.put('Submitter_Phone__c', req.submitterPhone);
       } catch (Exception e) {
         // If fields do not exist, ignore silently to avoid runtime failure.
       }
@@ -262,7 +259,6 @@ public without sharing class AssetIssueFacade {
         : (lng instanceof Integer ? Decimal.valueOf((Integer) lng) : null);
 
       req.submitterEmail = (String) m.get('submitterEmail');
-      req.submitterPhone = (String) m.get('submitterPhone');
 
       List<Object> filesRaw = (List<Object>) m.get('files');
       if (filesRaw != null) {
@@ -316,11 +312,6 @@ public without sharing class AssetIssueFacade {
       !String.isBlank(req.submitterEmail) && !looksLikeEmail(req.submitterEmail)
     ) {
       throw new AuraHandledException('Please enter a valid email address.');
-    }
-    if (
-      !String.isBlank(req.submitterPhone) && req.submitterPhone.length() > 40
-    ) {
-      throw new AuraHandledException('Phone number appears too long.');
     }
 
     if (req.files != null && req.files.size() > MAX_FILES) {

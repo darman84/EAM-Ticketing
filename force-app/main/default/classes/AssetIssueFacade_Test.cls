@@ -240,7 +240,7 @@ private class AssetIssueFacade_Test {
   @IsTest
   static void shouldCreateIssue_FromJsonString() {
     // Given
-    String reqJson = '{"assetType":"Pavement","severity":"Routine","description":"Test JSON","latitude":33.0,"longitude":-96.0,"submitterEmail":"test@test.com","submitterPhone":"123","files":[{"fileName":"test.png","contentType":"image/png","base64Data":"iVBORw0KGgo="}]}';
+    String reqJson = '{"assetType":"Pavement","severity":"Routine","description":"Test JSON","latitude":33.0,"longitude":-96.0,"submitterEmail":"test@test.com","files":[{"fileName":"test.png","contentType":"image/png","base64Data":"iVBORw0KGgo="}]}';
 
     // When
     Test.startTest();
