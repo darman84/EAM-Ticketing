@@ -5,8 +5,9 @@ Salesforce-to-EAM Infrastructure Ticketing System is a proof-of-concept Salesfor
 ## Documentation
 
 For project scope, requirements, and architecture details, please refer to the internal documentation:
-* [Product Requirements Document (PRD)](PRD.md)
-* [Technical Design Document](TDD.md)
+
+- [Product Requirements Document (PRD)](PRD.md)
+- [Technical Design Document](TDD.md)
 
 ## Installation
 
@@ -20,9 +21,10 @@ sf project deploy start
 ```
 
 Manual Configuration (Post-Deployment):
-* Create standard queues: `Signs Maintenance Queue`, `Utility Operations Queue`, `Pavement & Streets Queue` and assign `Asset_Issue__c` as a supported object.
-* Update Assignment nodes in the `Asset_Issue_Routing_and_Sync` Flow with your Queue IDs and activate the Flow.
-* Create a "Build Your Own (Aura)" Experience Cloud site, place the `assetIssueReporter` component, grant the Site Guest User Apex Class Access to `AssetIssueFacade`, and set the appropriate time zone.
+
+- Create standard queues: `Signs Maintenance Queue`, `Utility Operations Queue`, `Pavement & Streets Queue` and assign `Asset_Issue__c` as a supported object.
+- Update Assignment nodes in the `Asset_Issue_Routing_and_Sync` Flow with your Queue IDs and activate the Flow.
+- Create a "Build Your Own (Aura)" Experience Cloud site, place the `assetIssueReporter` component, grant the Site Guest User Apex Class Access to `AssetIssueFacade`, and set the appropriate time zone.
 
 ## Usage
 
@@ -34,6 +36,7 @@ The application features a public-facing portal for citizens to intake infrastru
 4. Internally, a Queueable Apex job processes the submission and integrates it with the external EAM system endpoint asynchronously.
 
 Run the test suite to verify behavior:
+
 ```bash
 sf apex run test --class-names EAMIntegration_Test --result-format human --code-coverage
 ```
