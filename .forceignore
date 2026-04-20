@@ -12,3 +12,50 @@ package.xml
 **/__tests__/**
 
 node_modules/
+
+# --- Salesforce Bloat Exclusions ---
+
+# Standard Objects
+force-app/main/default/objects/Account/
+force-app/main/default/objects/AccountBrand/
+force-app/main/default/objects/AccountCleanInfo/
+force-app/main/default/objects/AccountContactRole/
+force-app/main/default/objects/Activity/
+force-app/main/default/objects/Asset/
+force-app/main/default/objects/Campaign/
+force-app/main/default/objects/CampaignMember/
+force-app/main/default/objects/Case/
+force-app/main/default/objects/Contact/
+force-app/main/default/objects/ContentDocument/
+force-app/main/default/objects/ContentVersion/
+force-app/main/default/objects/Contract/
+force-app/main/default/objects/Event/
+force-app/main/default/objects/Lead/
+force-app/main/default/objects/Location/
+force-app/main/default/objects/Opportunity/
+force-app/main/default/objects/Order/
+force-app/main/default/objects/Product2/
+force-app/main/default/objects/Solution/
+force-app/main/default/objects/Task/
+force-app/main/default/objects/User/
+
+# System Metadata
+force-app/main/default/appMenus/
+force-app/main/default/applications/
+force-app/main/default/authproviders/
+force-app/main/default/cleanDataServices/
+force-app/main/default/cspTrustedSites/
+force-app/main/default/dashboards/
+force-app/main/default/duplicateRules/
+force-app/main/default/matchingRules/
+force-app/main/default/profiles/
+force-app/main/default/reportTypes/
+force-app/main/default/reports/
+force-app/main/default/settings/
+force-app/main/default/standardValueSets/
+force-app/main/default/standardValueSetTranslations/
+force-app/main/default/workflows/
+
+# Internal Profiles/Permsets
+force-app/main/default/permissionsets/Agentforce_Setup_Access*
+force-app/main/default/permissionsets/sfdcInternalInt__*
