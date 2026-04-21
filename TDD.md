@@ -12,6 +12,9 @@
   - `Asset_Type__c` - `Picklist` - Categorizes the issue (Signage, Water/Sewer, Pavement) and drives routing.
   - `Severity__c` - `Picklist` - Indicates the urgency (Routine, Urgent, Emergency).
   - `Description__c` - `Long Text Area` - Stores the detailed description of the reported issue.
+  - `Submitter_Email__c` - `Email` - Captures the submitter's email address for status update notifications.
+  - `EAM_Status__c` - `Picklist` - Tracks the operational status returned from the external EAM system.
+  - `EAM_Tech_Notes__c` - `Long Text Area` - Stores notes from the internal technicians via EAM.
   - `Sync_Status__c` - `Picklist` - Tracks the integration status with the external EAM (Pending, Success, Failed).
   - `External_EAM_ID__c` - `Text` - Stores the unique identifier returned from the EAM system (Unique, External ID).
   - `Location__c` - `Geolocation` - Stores the exact latitude and longitude of the issue.
@@ -19,7 +22,7 @@
 ## Components & Logic
 
 - **`assetIssueReporter` (LWC):** Provides the mobile-responsive form and interactive map for issue submission. Gathers inputs and submits a JSON payload to the Apex facade, bypassing standard Guest User CRUD constraints.
-- **`Asset_Issue_Routing_and_Sync` (Flow):** An After-Save Record-Triggered Flow that evaluates the `Asset_Type__c` to route the record to the appropriate standard queue and invokes the `EAMIntegrationRouter` Apex class.
+- **`Asset_Issue_Routing_and_Sync` (Flow):** An After-Save Record-Triggered Flow that evaluates `Asset_Type__c` to route the record to standard queues, triggers email alerts on `EAM_Status__c` updates, and invokes the `EAMIntegrationRouter` Apex class.
 - **`AssetIssueFacade.cls`:** An Apex class running `without sharing` to safely insert records and attach files (`firstPublishLocationId`) for guest users without direct DML in the LWC. Methods: `createIssueWithFiles` and `createIssueWithFilesFromJson`.
 - **`EAMIntegrationRouter.cls`:** Contains an `@InvocableMethod` to bridge the declarative Flow automation with the programmatic Queueable Apex. Enqueues the `EAMCalloutService`.
 - **`EAMCalloutService.cls`:** A Queueable Apex job that serializes the record data into a JSON payload and performs a POST callout to the external EAM endpoint, subsequently updating the `Sync_Status__c` and `External_EAM_ID__c` based on the HTTP response.

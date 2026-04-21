@@ -13,7 +13,7 @@
 - Mobile-Responsive UI with a custom Lightning Web Component (LWC) featuring client-side validation and a premium light theme.
 - Interactive Map Location using LWS-compliant Leaflet map integration with canvas-based markers.
 - Guest-Safe Submission Path using an Apex facade running in system context to avoid CRUD/file permission constraints.
-- Automated Triage via Salesforce Flow to route records to specific departmental queues (Signage, Water/Sewer, Pavement).
+- Automated Triage & Notifications via Salesforce Flow to route records to specific departmental queues (Signage, Water/Sewer, Pavement) and send status update emails to submitters.
 - Asynchronous EAM Integration via Apex REST callouts for pushing JSON payloads without disrupting user experience.
 - Bulk Data Resilience to support operations of up to 100 records per transaction without exceeding governor limits.
 

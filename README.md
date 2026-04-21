@@ -31,7 +31,7 @@ Manual Configuration (Post-Deployment):
 The application features a public-facing portal for citizens to intake infrastructure issues:
 
 1. Navigate to the Experience Cloud site.
-2. Fill out the mobile-responsive LWC form, which includes providing the asset type, severity, description, and an interactive Leaflet.js-powered map for geolocation selection.
+2. Fill out the mobile-responsive LWC form, which includes providing the asset type, severity, description, contact email, and an interactive Leaflet.js-powered map for geolocation selection.
 3. Submit the form. A background automated triage process evaluates the issue and routes it internally.
 4. Internally, a Queueable Apex job processes the submission and integrates it with the external EAM system endpoint asynchronously.
 
