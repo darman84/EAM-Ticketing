@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>UTF-8</encodingKey>
+    <name>New Issue Confirmation</name>
+    <relatedEntityType>Asset_Issue__c</relatedEntityType>
+    <style>none</style>
+    <subject
+  >Confirmation: Infrastructure Issue Received ({{{Asset_Issue__c.Asset_Type__c}}})</subject>
+    <type>custom</type>
+    <uiType>SFX</uiType>
+</EmailTemplate>

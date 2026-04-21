@@ -1,0 +1,20 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body style="height: auto; min-height: auto;">Hello,<br />
+<br />
+There has been an update regarding the infrastructure issue you recently reported.<br />
+<br />
+New Status: {{{Asset_Issue__c.EAM_Status__c}}}<br />
+<br />
+Technician Notes (if any):<br />
+{{{Asset_Issue__c.EAM_Tech_Notes__c}}}<br />
+<br />
+Thank you for helping us keep the city functional.<br />
+<br />
+Regards,<br />
+City Infrastructure Team<br />
+<br />
+&nbsp;</body>
+</html>

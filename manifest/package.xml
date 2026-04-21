@@ -3,8 +3,6 @@
     <types>
         <members>AssetIssueFacade</members>
         <members>AssetIssueTrackerController</members>
-        <members>AssetIssueFacade_Test</members>
-        <members>AssetIssueTrackerController_Test</members>
         <members>EAMCalloutService</members>
         <members>EAMIntegrationRouter</members>
         <members>EAMIntegration_Test</members>
@@ -43,6 +41,16 @@
     <types>
         <members>Asset_Issue__c-Asset Issue Layout</members>
         <name>Layout</name>
+    </types>
+    <types>
+        <members>unfiled$public/New_Issue_Confirmation_1776721028635</members>
+        <members
+    >unfiled$public/Status_Update_Notification_1776719500111</members>
+        <name>EmailTemplate</name>
+    </types>
+    <types>
+        <members>Asset_Issue__c</members>
+        <name>Workflow</name>
     </types>
     <version>60.0</version>
 </Package>

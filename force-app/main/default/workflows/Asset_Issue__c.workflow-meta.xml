@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <alerts>
+        <fullName>Send_New_Submission_Confirmation</fullName>
+        <description>Send New Submission Confirmation</description>
+        <protected>false</protected>
+        <recipients>
+            <field>Submitter_Email__c</field>
+            <type>email</type>
+        </recipients>
+        <senderType>DefaultWorkflowUser</senderType>
+        <template>unfiled$public/New_Issue_Confirmation_1776721028635</template>
+    </alerts>
+    <alerts>
+        <fullName>Send_Status_Update_Email</fullName>
+        <description>Send Status Update Email</description>
+        <protected>false</protected>
+        <recipients>
+            <field>Submitter_Email__c</field>
+            <type>email</type>
+        </recipients>
+        <senderType>DefaultWorkflowUser</senderType>
+        <template
+    >unfiled$public/Status_Update_Notification_1776719500111</template>
+    </alerts>
+</Workflow>

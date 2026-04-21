@@ -1,0 +1,20 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body style="height: auto; min-height: auto;">Hello,<br />
+<br />
+Thank you for taking the time to report an infrastructure issue. This email confirms that your submission has been successfully received and routed to our public works team.<br />
+<br />
+Issue Details:<br />
+• Type: {{{Asset_Issue__c.Asset_Type__c}}}<br />
+• Severity: {{{Asset_Issue__c.Severity__c}}}<br />
+• Description: {{{Asset_Issue__c.Description__c}}}<br />
+<br />
+Our team will triage the issue shortly. You will receive another notification when the status of this ticket changes.<br />
+<br />
+Regards,<br />
+City Infrastructure Team<br />
+<br />
+&nbsp;</body>
+</html>
