@@ -7,6 +7,10 @@
         <locationY>0</locationY>
         <actionName>EAMIntegrationRouter</actionName>
         <actionType>apex</actionType>
+        <connector>
+            <targetReference
+      >Send_New_Submission_Confirmation_Email</targetReference>
+        </connector>
         <flowTransactionModel>Automatic</flowTransactionModel>
         <inputParameters>
             <name>issueIds</name>
@@ -17,15 +21,29 @@
         <nameSegment>EAMIntegrationRouter</nameSegment>
     </actionCalls>
     <actionCalls>
+        <name>Send_New_Submission_Confirmation_Email</name>
+        <label>Send New Submission Confirmation Email</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>Asset_Issue__c.Send_New_Submission_Confirmation</actionName>
+        <actionType>emailAlert</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>SObjectRowId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment
+    >Asset_Issue__c.Send_New_Submission_Confirmation</nameSegment>
+    </actionCalls>
+    <actionCalls>
         <name>Send_Status_Update_Email</name>
         <label>Send Status Update Email</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <actionName>Asset_Issue__c.Send_Status_Update_Email</actionName>
         <actionType>emailAlert</actionType>
-        <connector>
-            <targetReference>Route_by_Type</targetReference>
-        </connector>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
             <name>SObjectRowId</name>
