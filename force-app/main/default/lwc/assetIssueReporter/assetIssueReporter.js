@@ -626,18 +626,35 @@ export default class AssetIssueReporter extends LightningElement {
     }
   };
 
-  // Handle file selection and preview
+  // Handle file selection and preview — appends to existing list (no full replace)
   onFilesSelected = async (e) => {
     const files = e.target.files ? Array.from(e.target.files) : [];
-    if (!files.length) {
-      this.filePreviews = [];
+    if (!files.length) return;
+
+    const MAX_FILES = 5;
+    // Determine how many slots remain
+    const remaining = MAX_FILES - this.filePreviews.length;
+    if (remaining <= 0) {
+      this.dispatchEvent(
+        new ShowToastEvent({
+          title: "File Limit Reached",
+          message: `You can upload a maximum of ${MAX_FILES} photos. Remove a file to add another.`,
+          variant: "warning"
+        })
+      );
       return;
     }
-    // Client-side cap to align with Apex MAX_FILES
-    const max = 5;
-    const selected = files.slice(0, max);
-    const previews = await Promise.all(
-      selected.map(async (f) => {
+
+    // Filter out files already in the list (by name) and cap to remaining slots
+    const existingNames = new Set(this.filePreviews.map((fp) => fp.name));
+    const incoming = files
+      .filter((f) => !existingNames.has(f.name))
+      .slice(0, remaining);
+
+    if (!incoming.length) return;
+
+    const newPreviews = await Promise.all(
+      incoming.map(async (f) => {
         const base64 = await this.readFileAsBase64(f);
         return {
           name: f.name,
@@ -648,7 +665,14 @@ export default class AssetIssueReporter extends LightningElement {
         };
       })
     );
-    this.filePreviews = previews;
+    // Append new previews; freeze reference to trigger reactive re-render
+    this.filePreviews = [...this.filePreviews, ...newPreviews];
+  };
+
+  // Remove a single file from the list by name
+  removeFile = (e) => {
+    const nameToRemove = e.currentTarget.dataset.name;
+    this.filePreviews = this.filePreviews.filter((fp) => fp.name !== nameToRemove);
   };
 
   readFileAsBase64(file) {
