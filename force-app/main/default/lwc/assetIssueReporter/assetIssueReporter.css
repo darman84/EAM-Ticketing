@@ -2,7 +2,7 @@
 .premium-container {
   padding: 2rem 1rem;
   min-height: 100vh;
-  background: transparent;
+  background: #ffffff;
   display: flex; /* stylelint-disable-line */
   justify-content: center; /* stylelint-disable-line */
   align-items: flex-start; /* stylelint-disable-line */
@@ -11,45 +11,7 @@
   color: #0f172a;
 }
 
-.background-blob {
-  position: absolute; /* stylelint-disable-line */
-  border-radius: 50%;
-  filter: blur(100px);
-  opacity: 0.3;
-  z-index: 0;
-  pointer-events: none;
-  animation: float 12s infinite alternate ease-in-out;
-}
 
-.blob-1 {
-  width: 40vw;
-  height: 40vw;
-  background: #3b82f6;
-  /* Blue */
-  top: -10%;
-  left: -10%;
-}
-
-.blob-2 {
-  width: 35vw;
-  height: 35vw;
-  background: #8b5cf6;
-  /* Purple */
-  bottom: -10%;
-  right: -10%;
-  animation-delay: -5s;
-  animation-duration: 18s;
-}
-
-@keyframes float {
-  0% {
-    transform: translate(0, 0) scale(1);
-  }
-
-  100% {
-    transform: translate(10vw, 5vw) scale(1.1);
-  }
-}
 
 /* Glass Card */
 .glass-card {
