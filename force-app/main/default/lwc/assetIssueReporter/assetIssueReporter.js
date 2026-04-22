@@ -672,7 +672,9 @@ export default class AssetIssueReporter extends LightningElement {
   // Remove a single file from the list by name
   removeFile = (e) => {
     const nameToRemove = e.currentTarget.dataset.name;
-    this.filePreviews = this.filePreviews.filter((fp) => fp.name !== nameToRemove);
+    this.filePreviews = this.filePreviews.filter(
+      (fp) => fp.name !== nameToRemove
+    );
   };
 
   readFileAsBase64(file) {

@@ -442,7 +442,9 @@
   padding: 0 0.1rem; /* stylelint-disable-line */
   margin-left: auto; /* stylelint-disable-line */
   border-radius: 50%;
-  transition: color 0.15s ease, background 0.15s ease;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease;
   flex-shrink: 0;
 }
 
