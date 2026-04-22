@@ -13,7 +13,7 @@
   - `Severity__c` - `Picklist` - Indicates the urgency (Routine, Urgent, Emergency).
   - `Description__c` - `Long Text Area` - Stores the detailed description of the reported issue.
   - `Submitter_Email__c` - `Email` - Captures the submitter's email address for status update notifications.
-  - `EAM_Status__c` - `Picklist` - Tracks the operational status returned from the external EAM system (New, In Progress, On Hold, Resolved, Closed). Defaults to **New**. Non-restricted to allow EAM to push arbitrary status strings.
+  - `EAM_Status__c` - `Text(255)` - Tracks the operational status returned from the external EAM system. Defaults to **"New"** on record creation. Accepts any string value pushed by the EAM via `EAMStatusUpdateAPI`.
   - `EAM_Tech_Notes__c` - `Long Text Area` - Stores notes from the internal technicians via EAM.
   - `Sync_Status__c` - `Picklist` - Tracks the integration status with the external EAM (Pending, Success, Failed).
   - `External_EAM_ID__c` - `Text` - Stores the unique identifier returned from the EAM system (Unique, External ID).
