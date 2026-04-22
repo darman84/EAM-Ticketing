@@ -29,6 +29,7 @@ Manual Configuration (Post-Deployment):
 - Grant the Site Guest User Apex Class Access to both `AssetIssueFacade` and `AssetIssueTrackerController`.
 - Enable "Track Activities" on the `Asset_Issue__c` object in Object Manager.
 - Set the appropriate time zone on the Experience Cloud site.
+- Once activated, your public portal will be available at `https://<your-experience-site-domain>/s/` and the tracker at `https://<your-experience-site-domain>/s/ticket-status?id=<EAM-ID>`.
 
 ## Usage
 
