@@ -219,6 +219,16 @@
                           <span class="file-name">{f.name}</span>
                           <span class="file-size">{f.sizeLabel}</span>
                         </div>
+                        <button
+                          class="file-remove-btn"
+                          data-name={f.name}
+                          onclick={removeFile}
+                          title="Remove file"
+                          type="button"
+                          aria-label="Remove file"
+                        >
+                          ×
+                        </button>
                       </li>
                     </template>
                   </ul>

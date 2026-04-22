@@ -432,6 +432,27 @@
   font-size: 0.7rem;
 }
 
+.file-remove-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #94a3b8;
+  font-size: 1.1rem;
+  line-height: 1;
+  padding: 0 0.1rem; /* stylelint-disable-line */
+  margin-left: auto; /* stylelint-disable-line */
+  border-radius: 50%;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease;
+  flex-shrink: 0;
+}
+
+.file-remove-btn:hover {
+  color: #dc2626;
+  background: rgba(220, 38, 38, 0.1);
+}
+
 @keyframes scaleIn {
   from {
     opacity: 0;
