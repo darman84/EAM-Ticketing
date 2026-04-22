@@ -7,9 +7,13 @@
 Thank you for taking the time to report an infrastructure issue. This email confirms that your submission has been successfully received and routed to our public works team.<br />
 <br />
 Issue Details:<br />
+• EAM Tracking ID: {{{Asset_Issue__c.External_EAM_ID__c}}}<br />
 • Type: {{{Asset_Issue__c.Asset_Type__c}}}<br />
 • Severity: {{{Asset_Issue__c.Severity__c}}}<br />
 • Description: {{{Asset_Issue__c.Description__c}}}<br />
+<br />
+You can view your ticket details, including photos and technician notes, by clicking the link below:<br />
+<a href="https://orgfarm-1d35f15b8b-dev-ed.develop.my.site.com/s/ticket-status?id={{{Asset_Issue__c.External_EAM_ID__c}}}">View Ticket Details</a><br />
 <br />
 Our team will triage the issue shortly. You will receive another notification when the status of this ticket changes.<br />
 <br />

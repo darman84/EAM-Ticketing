@@ -21,6 +21,11 @@
       </header>
 
       <div class="card-content premium-form">
+        <template if:true={submitting}>
+          <lightning-spinner
+            alternative-text="Submitting Issue..."
+          ></lightning-spinner>
+        </template>
         <template if:true={showForm}>
           <div class="content-grid">
             <!-- Left Column: Form Fields -->
@@ -245,6 +250,14 @@
               ></lightning-icon>
             </div>
             <h2 class="success-title">Issue Reported Successfully!</h2>
+            <template if:true={trackingId}>
+              <p
+                class="slds-text-heading_small slds-m-bottom_medium"
+                style="font-weight: bold"
+              >
+                Tracking ID: {trackingId}
+              </p>
+            </template>
             <p class="success-message">
               Thank you for helping keep the city functional. Your report has
               been dispatched to the appropriate department.
