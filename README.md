@@ -24,21 +24,26 @@ Manual Configuration (Post-Deployment):
 
 - Create standard queues: `Signs Maintenance Queue`, `Utility Operations Queue`, `Pavement & Streets Queue` and assign `Asset_Issue__c` as a supported object.
 - Update Assignment nodes in the `Asset_Issue_Routing_and_Sync` Flow with your Queue IDs and activate the Flow.
-- Create a "Build Your Own (Aura)" Experience Cloud site, place the `assetIssueReporter` component, grant the Site Guest User Apex Class Access to `AssetIssueFacade`, and set the appropriate time zone.
+- Create a "Build Your Own (Aura)" Experience Cloud site. Place the `assetIssueReporter` component on the home page.
+- Create a new Standard Page named `Ticket Status` (URL slug: `ticket-status`) and place the `assetIssueTracker` component on it.
+- Grant the Site Guest User Apex Class Access to both `AssetIssueFacade` and `AssetIssueTrackerController`.
+- Enable "Track Activities" on the `Asset_Issue__c` object in Object Manager.
+- Set the appropriate time zone on the Experience Cloud site.
 
 ## Usage
 
-The application features a public-facing portal for citizens to intake infrastructure issues:
+The application features a public-facing portal for citizens to intake and track infrastructure issues:
 
-1. Navigate to the Experience Cloud site.
-2. Fill out the mobile-responsive LWC form, which includes providing the asset type, severity, description, contact email, and an interactive Leaflet.js-powered map for geolocation selection.
-3. Submit the form. A background automated triage process evaluates the issue and routes it internally.
-4. Internally, a Queueable Apex job processes the submission and integrates it with the external EAM system endpoint asynchronously.
+1. Navigate to the Experience Cloud site and fill out the mobile-responsive form — including asset type, severity, description, optional contact email, optional photo uploads, and an interactive Leaflet.js-powered map for geolocation.
+2. Submit the form. A spinner appears while the system polls for the generated EAM Tracking ID (up to 10 seconds). The ID is displayed on the confirmation screen once available.
+3. A background Queueable Apex job integrates the submission with the external EAM system asynchronously. Upon success, a confirmation email is sent to the submitter (if provided) containing the EAM Tracking ID and a link to the public tracker.
+4. The submitter can visit `<site-url>/s/ticket-status?id=<EAM-ID>` at any time to view full ticket details, including status, technician notes, and attached photos.
+5. When the ticket status is updated by the EAM system (via the REST API), an automated status notification email is sent to the submitter.
 
 Run the test suite to verify behavior:
 
 ```bash
-sf apex run test --class-names EAMIntegration_Test --result-format human --code-coverage
+sf apex run test --class-names AssetIssueFacade_Test AssetIssueTrackerController_Test EAMIntegration_Test EAMStatusUpdateAPI_Test --result-format human --code-coverage
 ```
 
 ## Contributing
