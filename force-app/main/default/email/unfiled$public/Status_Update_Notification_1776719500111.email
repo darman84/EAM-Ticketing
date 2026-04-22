@@ -1,0 +1,23 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body style="height: auto; min-height: auto;">Hello,<br />
+<br />
+There has been an update regarding the infrastructure issue you recently reported (EAM Tracking ID: {{{Asset_Issue__c.External_EAM_ID__c}}}).<br />
+<br />
+New Status: {{{Asset_Issue__c.EAM_Status__c}}}<br />
+<br />
+Technician Notes (if any):<br />
+{{{Asset_Issue__c.EAM_Tech_Notes__c}}}<br />
+<br />
+You can view the full details of your ticket at any time by clicking the link below:<br />
+<a href="https://orgfarm-1d35f15b8b-dev-ed.develop.my.site.com/s/ticket-status?id={{{Asset_Issue__c.External_EAM_ID__c}}}">View Ticket Details</a><br />
+<br />
+Thank you for helping us keep the city functional.<br />
+<br />
+Regards,<br />
+City Infrastructure Team<br />
+<br />
+&nbsp;</body>
+</html>

@@ -54,7 +54,9 @@ force-app/main/default/reports/
 force-app/main/default/settings/
 force-app/main/default/standardValueSets/
 force-app/main/default/standardValueSetTranslations/
-force-app/main/default/workflows/
+# force-app/main/default/workflows/
+force-app/main/default/workflows/*
+!force-app/main/default/workflows/Asset_Issue__c.workflow-meta.xml
 
 # Internal Profiles/Permsets
 force-app/main/default/permissionsets/Agentforce_Setup_Access*

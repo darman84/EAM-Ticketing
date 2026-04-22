@@ -3,6 +3,7 @@ import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import { loadScript, loadStyle } from "lightning/platformResourceLoader";
 import LEAFLET_RES from "@salesforce/resourceUrl/Leaflet";
 import createIssueFromJson from "@salesforce/apex/AssetIssueFacade.createIssueWithFilesFromJson";
+import pollForTrackingId from "@salesforce/apex/AssetIssueTrackerController.pollForTrackingId";
 
 // Fallback center: Plano, TX
 const FALLBACK_CENTER = { lat: 33.0198, lng: -96.6989 };
@@ -22,6 +23,7 @@ export default class AssetIssueReporter extends LightningElement {
   };
   @track filePreviews = [];
   submitting = false;
+  trackingId = null;
   // Private flags used previously for one-time console logs have been removed in cleanup
 
   // Picklist options (mirror server allowlist used in Apex)
@@ -706,6 +708,30 @@ export default class AssetIssueReporter extends LightningElement {
 
       if (res && res.success) {
         this.recordId = res.issueId;
+
+        // Wait for async backend integration to generate Tracking ID
+        let attempts = 0;
+        const maxAttempts = 10;
+
+        while (attempts < maxAttempts) {
+          attempts++;
+          // eslint-disable-next-line @lwc/lwc/no-async-operation, no-await-in-loop
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          try {
+            // eslint-disable-next-line no-await-in-loop
+            const polledId = await pollForTrackingId({
+              recordId: this.recordId
+            });
+            if (polledId) {
+              this.trackingId = polledId;
+              break;
+            }
+            // eslint-disable-next-line no-unused-vars
+          } catch (pollErr) {
+            // ignore
+          }
+        }
+
         this.showForm = false;
         this.showUpload = true;
         this.dispatchEvent(
@@ -754,6 +780,7 @@ export default class AssetIssueReporter extends LightningElement {
     this.mapInitialized = false;
     this.map = null;
     this.filePreviews = [];
+    this.trackingId = null;
     this.form = {
       assetType: "",
       severity: "",

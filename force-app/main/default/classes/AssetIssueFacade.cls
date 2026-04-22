@@ -200,6 +200,30 @@ public without sharing class AssetIssueFacade {
 
         if (!versions.isEmpty()) {
           insert versions;
+
+          // Expose files to Community Guest users via AllUsers visibility
+          Set<Id> cdIds = new Set<Id>();
+          for (ContentVersion v : [
+            SELECT ContentDocumentId
+            FROM ContentVersion
+            WHERE Id IN :versions
+          ]) {
+            cdIds.add(v.ContentDocumentId);
+          }
+
+          List<ContentDocumentLink> cdlsToUpdate = new List<ContentDocumentLink>();
+          for (ContentDocumentLink cdl : [
+            SELECT Id, Visibility
+            FROM ContentDocumentLink
+            WHERE ContentDocumentId IN :cdIds AND LinkedEntityId = :issue.Id
+          ]) {
+            cdl.Visibility = 'AllUsers';
+            cdlsToUpdate.add(cdl);
+          }
+
+          if (!cdlsToUpdate.isEmpty()) {
+            update cdlsToUpdate;
+          }
         }
       }
 

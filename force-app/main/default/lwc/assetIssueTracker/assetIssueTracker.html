@@ -20,16 +20,71 @@
         </lightning-layout-item>
       </lightning-layout>
 
-      <template if:true={statusResult}>
-        <div
-          class="slds-var-m-top_large slds-box slds-theme_default slds-text-align_center"
-        >
-          <p class="slds-text-heading_medium">Current Status:</p>
-          <p
-            class="slds-text-heading_large slds-text-color_success slds-var-m-top_small"
-          >
-            <b>{statusResult}</b>
-          </p>
+      <template if:true={error}>
+        <div class="slds-text-color_error slds-var-m-top_medium">{error}</div>
+      </template>
+
+      <template if:true={issueDetails}>
+        <div class="slds-var-m-top_large slds-box slds-theme_default">
+          <div class="slds-grid slds-wrap slds-gutters">
+            <div
+              class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-var-m-bottom_medium"
+            >
+              <p class="slds-text-title_caps">Current Status</p>
+              <p class="slds-text-heading_medium slds-text-color_success">
+                <b>{issueDetails.status}</b>
+              </p>
+            </div>
+            <div
+              class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-var-m-bottom_medium"
+            >
+              <p class="slds-text-title_caps">Asset Type</p>
+              <p class="slds-text-heading_small">{issueDetails.assetType}</p>
+            </div>
+            <div
+              class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-var-m-bottom_medium"
+            >
+              <p class="slds-text-title_caps">Severity</p>
+              <p class="slds-text-heading_small">{issueDetails.severity}</p>
+            </div>
+            <template if:true={issueDetails.techNotes}>
+              <div class="slds-col slds-size_1-of-1 slds-var-m-bottom_medium">
+                <p class="slds-text-title_caps">Tech Notes</p>
+                <p class="slds-text-body_regular">{issueDetails.techNotes}</p>
+              </div>
+            </template>
+            <template if:true={issueDetails.description}>
+              <div class="slds-col slds-size_1-of-1 slds-var-m-bottom_medium">
+                <p class="slds-text-title_caps">Description</p>
+                <p class="slds-text-body_regular">{issueDetails.description}</p>
+              </div>
+            </template>
+          </div>
+
+          <template if:true={issueDetails.imageUrls}>
+            <p class="slds-text-title_caps slds-var-m-bottom_small">
+              Attached Photos
+            </p>
+            <div class="slds-grid slds-wrap slds-gutters">
+              <template for:each={issueDetails.imageUrls} for:item="imgUrl">
+                <div
+                  key={imgUrl}
+                  class="slds-col slds-size_1-of-2 slds-medium-size_1-of-3 slds-var-m-bottom_small"
+                >
+                  <img
+                    src={imgUrl}
+                    alt="Ticket Image"
+                    class="slds-box slds-box_x-small"
+                    style="
+                      max-width: 100%;
+                      max-height: 200px;
+                      object-fit: contain;
+                    "
+                  />
+                </div>
+              </template>
+            </div>
+          </template>
         </div>
       </template>
     </div>
