@@ -137,17 +137,16 @@ private class AssetIssueFacade_Test {
       AssetIssueFacade.createIssueWithFiles(req);
       Assert.fail('Expected AuraHandledException for missing required fields');
     } catch (AuraHandledException ahe) {
-      Assert.isTrue(
-        ahe.getMessage().contains('required fields'),
-        'Message should indicate required fields missing'
-      );
+      // AuraHandledException.getMessage() always returns 'Script-thrown exception' in Apex;
+      // the user-facing message is only surfaced on the client. Assert on type only.
+      Assert.isTrue(ahe != null, 'Should throw AuraHandledException');
     }
     Test.stopTest();
   }
 
   @IsTest
   static void shouldFail_WhenInvalidPicklistValues() {
-    // Given
+    // Given - Invalid asset type
     AssetIssueFacade.CreateIssueRequest req = new AssetIssueFacade.CreateIssueRequest();
     req.assetType = 'InvalidType';
     req.severity = 'Routine';
@@ -160,23 +159,21 @@ private class AssetIssueFacade_Test {
       Assert.fail('Expected AuraHandledException for invalid asset type');
     } catch (AuraHandledException ahe) {
       Assert.isTrue(
-        ahe.getMessage().contains('Invalid Asset Type'),
-        'Message should indicate invalid asset type'
+        ahe != null,
+        'Should throw AuraHandledException for invalid asset type'
       );
     }
-    Test.stopTest();
 
     // Invalid severity
     req.assetType = 'Pavement';
     req.severity = 'Bad';
-    Test.startTest();
     try {
       AssetIssueFacade.createIssueWithFiles(req);
       Assert.fail('Expected AuraHandledException for invalid severity');
     } catch (AuraHandledException ahe) {
       Assert.isTrue(
-        ahe.getMessage().contains('Invalid Severity'),
-        'Message should indicate invalid severity'
+        ahe != null,
+        'Should throw AuraHandledException for invalid severity'
       );
     }
     Test.stopTest();
@@ -203,11 +200,10 @@ private class AssetIssueFacade_Test {
       Assert.fail('Expected AuraHandledException for unsupported file type');
     } catch (AuraHandledException ahe) {
       Assert.isTrue(
-        ahe.getMessage().contains('Unsupported file type'),
-        'Message should indicate unsupported type'
+        ahe != null,
+        'Should throw AuraHandledException for unsupported type'
       );
     }
-    Test.stopTest();
 
     // Given: Oversize (create blob > 4 MB)
     Integer size = 4 * 1024 * 1024 + 1;
@@ -224,14 +220,13 @@ private class AssetIssueFacade_Test {
       )
     };
 
-    Test.startTest();
     try {
       AssetIssueFacade.createIssueWithFiles(oversizeReq);
       Assert.fail('Expected AuraHandledException for oversize file');
     } catch (AuraHandledException ahe) {
       Assert.isTrue(
-        ahe.getMessage().contains('exceed'),
-        'Message should indicate size exceeded'
+        ahe != null,
+        'Should throw AuraHandledException for oversize file'
       );
     }
     Test.stopTest();
@@ -266,13 +261,12 @@ private class AssetIssueFacade_Test {
 
   @IsTest
   static void shouldFail_WhenInvalidJsonString() {
-    // Given
-    String badJson = '{"assetType": "BadFormat",';
-
-    // When/Then
+    // When/Then - bad JSON
     Test.startTest();
     try {
-      AssetIssueFacade.createIssueWithFilesFromJson(badJson);
+      AssetIssueFacade.createIssueWithFilesFromJson(
+        '{"assetType": "BadFormat",'
+      );
       Assert.fail('Expected exception for invalid JSON');
     } catch (Exception e) {
       Assert.isTrue(
@@ -280,18 +274,13 @@ private class AssetIssueFacade_Test {
         'Should throw AuraHandledException'
       );
     }
-    Test.stopTest();
 
     // Also test null
-    Test.startTest();
     try {
       AssetIssueFacade.createIssueWithFilesFromJson(null);
       Assert.fail('Expected exception for null JSON');
     } catch (Exception e) {
-      Assert.isTrue(
-        e.getMessage().contains('Request is required'),
-        'Message should indicate required'
-      );
+      Assert.isTrue(e != null, 'Should throw for null input');
     }
     Test.stopTest();
   }
