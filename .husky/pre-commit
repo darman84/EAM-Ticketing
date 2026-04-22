@@ -1,1 +1,8 @@
+#!/usr/bin/env sh
+
+# Run lint-staged: Prettier → ESLint → LWC Jest (on staged files only)
 npm run precommit
+
+echo ""
+echo "✅ Pre-commit checks passed."
+echo "💡 Reminder: run 'npm run test:apex' before pushing to verify Apex test coverage."
