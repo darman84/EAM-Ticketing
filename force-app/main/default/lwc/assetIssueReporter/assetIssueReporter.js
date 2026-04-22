@@ -226,8 +226,11 @@ export default class AssetIssueReporter extends LightningElement {
     // eslint-disable-next-line no-undef
     this.canvasLayer = L.layerGroup().addTo(this.map);
 
-    this.drawCanvasMarker = (lat, lng) => {
-      // Remove any previous circle marker
+    // LWS-safe pin: two stacked circleMarkers via Leaflet's internal Canvas
+    // renderer (preferCanvas: true). L.divIcon/L.marker are avoided because
+    // they rely on el.innerHTML which LWS sandboxes and silently discards.
+    this.drawPinMarker = (lat, lng) => {
+      // Remove any previous pin markers
       if (this.canvasMarker) {
         try {
           this.canvasLayer.removeLayer(this.canvasMarker);
@@ -237,17 +240,38 @@ export default class AssetIssueReporter extends LightningElement {
         }
         this.canvasMarker = null;
       }
+      if (this._innerPinMarker) {
+        try {
+          this.canvasLayer.removeLayer(this._innerPinMarker);
+          // eslint-disable-next-line no-unused-vars
+        } catch (e) {
+          // ignore
+        }
+        this._innerPinMarker = null;
+      }
+      // Outer: bold red filled circle with white border
       // eslint-disable-next-line no-undef
-      const circle = L.circleMarker([lat, lng], {
-        radius: 8,
-        color: "#1b96ff",
-        weight: 2,
-        fillColor: "#1b96ff",
+      this.canvasMarker = L.circleMarker([lat, lng], {
+        radius: 12,
+        color: "#ffffff",
+        weight: 2.5,
+        fillColor: "#dc3545",
+        fillOpacity: 1,
+        interactive: false
+      }).addTo(this.canvasLayer);
+      // Inner: small white dot for pin "eye" contrast
+      // eslint-disable-next-line no-undef
+      this._innerPinMarker = L.circleMarker([lat, lng], {
+        radius: 4,
+        color: "transparent",
+        weight: 0,
+        fillColor: "#ffffff",
         fillOpacity: 0.9,
         interactive: false
-      });
-      this.canvasMarker = circle.addTo(this.canvasLayer);
+      }).addTo(this.canvasLayer);
     };
+    // Alias kept for any remaining call-sites
+    this.drawCanvasMarker = this.drawPinMarker;
 
     // Track pointer start to distinguish intentional clicks from drags
     let startX = 0,
@@ -376,9 +400,9 @@ export default class AssetIssueReporter extends LightningElement {
   // Legacy image-based marker removed. Use canvas-based drawCanvasMarker everywhere.
   setMarker(lat, lng, fromUserInteraction = false) {
     try {
-      // Draw the canvas marker instead
-      if (typeof this.drawCanvasMarker === "function") {
-        this.drawCanvasMarker(lat, lng);
+      // Draw the premium pin marker
+      if (typeof this.drawPinMarker === "function") {
+        this.drawPinMarker(lat, lng);
       }
       this.applyLocation(lat, lng);
       if (fromUserInteraction) {
@@ -461,7 +485,16 @@ export default class AssetIssueReporter extends LightningElement {
         // no-op
       }
     }
+    if (this._innerPinMarker && this.canvasLayer) {
+      try {
+        this.canvasLayer.removeLayer(this._innerPinMarker);
+        // eslint-disable-next-line no-unused-vars
+      } catch (e) {
+        // no-op
+      }
+    }
     this.canvasMarker = null;
+    this._innerPinMarker = null;
 
     this.latitude = null;
     this.longitude = null;
@@ -500,8 +533,8 @@ export default class AssetIssueReporter extends LightningElement {
         typeof center.lat === "number" &&
         typeof center.lng === "number"
       ) {
-        // Draw canvas-based marker at center and update state
-        this.drawCanvasMarker(center.lat, center.lng);
+        // Draw premium pin marker at center and update state
+        this.drawPinMarker(center.lat, center.lng);
         this.applyLocation(center.lat, center.lng);
         const msg = `Marker placed at center (${center.lat.toFixed(6)}, ${center.lng.toFixed(6)}).`;
         this.dispatchEvent(
@@ -777,6 +810,8 @@ export default class AssetIssueReporter extends LightningElement {
     this.latitude = null;
     this.longitude = null;
     this.canvasMarker = null;
+    this._innerPinMarker = null;
+    this.drawPinMarker = null;
     this.mapInitialized = false;
     this.map = null;
     this.filePreviews = [];

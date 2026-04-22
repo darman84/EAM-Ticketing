@@ -249,20 +249,38 @@
   will-change: transform;
 }
 
-/* Crosshair for Map Center */
+/* Crosshair for Map Center — refined target ring */
 .crosshair-circle {
   pointer-events: none;
   position: absolute; /* stylelint-disable-line */
   top: 50%;
   left: 50%;
-  width: 24px;
-  height: 24px;
-  margin-left: -12px;
-  margin-top: -12px;
-  border: 2px solid #3b82f6;
+  width: 28px;
+  height: 28px;
+  margin-left: -14px;
+  margin-top: -14px;
+  border: 2.5px solid rgba(220, 53, 69, 0.75);
   border-radius: 50%;
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+  box-shadow:
+    0 0 0 5px rgba(220, 53, 69, 0.12),
+    0 0 12px 2px rgba(220, 53, 69, 0.18);
   z-index: 1000;
+  animation: targetPulse 2s ease-in-out infinite;
+}
+
+@keyframes targetPulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 5px rgba(220, 53, 69, 0.12),
+      0 0 12px 2px rgba(220, 53, 69, 0.18);
+  }
+
+  50% {
+    box-shadow:
+      0 0 0 9px rgba(220, 53, 69, 0.06),
+      0 0 20px 4px rgba(220, 53, 69, 0.12);
+  }
 }
 
 .crosshair-x {
@@ -272,7 +290,7 @@
   left: 0;
   right: 0;
   height: 0;
-  border-top: 1px dashed rgba(59, 130, 246, 0.5);
+  border-top: 1px solid rgba(220, 53, 69, 0.3);
   z-index: 999;
 }
 
@@ -283,7 +301,7 @@
   top: 0;
   bottom: 0;
   width: 0;
-  border-left: 1px dashed rgba(59, 130, 246, 0.5);
+  border-left: 1px solid rgba(220, 53, 69, 0.3);
   z-index: 999;
 }
 
