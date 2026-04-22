@@ -226,25 +226,11 @@ export default class AssetIssueReporter extends LightningElement {
     // eslint-disable-next-line no-undef
     this.canvasLayer = L.layerGroup().addTo(this.map);
 
-    // Inline SVG pin — injected as raw HTML to bypass LWS/Experience Cloud
-    // img-src rewriting that breaks the standard Leaflet icon pipeline.
-    const PIN_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 36" width="28" height="42">
-      <defs>
-        <radialGradient id="pinGrad" cx="40%" cy="30%" r="70%">
-          <stop offset="0%" stop-color="#ff6b6b"/>
-          <stop offset="100%" stop-color="#c0392b"/>
-        </radialGradient>
-        <filter id="pinShadow" x="-30%" y="-10%" width="160%" height="150%">
-          <feDropShadow dx="0" dy="3" stdDeviation="2" flood-color="rgba(0,0,0,0.35)"/>
-        </filter>
-      </defs>
-      <path d="M12 0C7.2 0 3 4.2 3 9c0 6.75 9 19.5 9 19.5S21 15.75 21 9c0-4.8-4.2-9-9-9z"
-            fill="url(#pinGrad)" filter="url(#pinShadow)"/>
-      <circle cx="12" cy="9" r="4" fill="#fff" opacity="0.9"/>
-    </svg>`;
-
+    // LWS-safe pin: two stacked circleMarkers via Leaflet's internal Canvas
+    // renderer (preferCanvas: true). L.divIcon/L.marker are avoided because
+    // they rely on el.innerHTML which LWS sandboxes and silently discards.
     this.drawPinMarker = (lat, lng) => {
-      // Remove any previous pin marker
+      // Remove any previous pin markers
       if (this.canvasMarker) {
         try {
           this.canvasLayer.removeLayer(this.canvasMarker);
@@ -254,21 +240,37 @@ export default class AssetIssueReporter extends LightningElement {
         }
         this.canvasMarker = null;
       }
+      if (this._innerPinMarker) {
+        try {
+          this.canvasLayer.removeLayer(this._innerPinMarker);
+          // eslint-disable-next-line no-unused-vars
+        } catch (e) {
+          // ignore
+        }
+        this._innerPinMarker = null;
+      }
+      // Outer: bold red filled circle with white border
       // eslint-disable-next-line no-undef
-      const pinIcon = L.divIcon({
-        className: "premium-map-pin",
-        html: PIN_SVG,
-        iconSize: [28, 42],
-        iconAnchor: [14, 42],
-        popupAnchor: [0, -44]
-      });
+      this.canvasMarker = L.circleMarker([lat, lng], {
+        radius: 12,
+        color: "#ffffff",
+        weight: 2.5,
+        fillColor: "#dc3545",
+        fillOpacity: 1,
+        interactive: false
+      }).addTo(this.canvasLayer);
+      // Inner: small white dot for pin "eye" contrast
       // eslint-disable-next-line no-undef
-      this.canvasMarker = L.marker([lat, lng], {
-        icon: pinIcon,
+      this._innerPinMarker = L.circleMarker([lat, lng], {
+        radius: 4,
+        color: "transparent",
+        weight: 0,
+        fillColor: "#ffffff",
+        fillOpacity: 0.9,
         interactive: false
       }).addTo(this.canvasLayer);
     };
-    // Alias for legacy call-sites that haven't been updated
+    // Alias kept for any remaining call-sites
     this.drawCanvasMarker = this.drawPinMarker;
 
     // Track pointer start to distinguish intentional clicks from drags
@@ -483,8 +485,16 @@ export default class AssetIssueReporter extends LightningElement {
         // no-op
       }
     }
+    if (this._innerPinMarker && this.canvasLayer) {
+      try {
+        this.canvasLayer.removeLayer(this._innerPinMarker);
+        // eslint-disable-next-line no-unused-vars
+      } catch (e) {
+        // no-op
+      }
+    }
     this.canvasMarker = null;
-    this.drawPinMarker = null;
+    this._innerPinMarker = null;
 
     this.latitude = null;
     this.longitude = null;
@@ -800,6 +810,7 @@ export default class AssetIssueReporter extends LightningElement {
     this.latitude = null;
     this.longitude = null;
     this.canvasMarker = null;
+    this._innerPinMarker = null;
     this.drawPinMarker = null;
     this.mapInitialized = false;
     this.map = null;
