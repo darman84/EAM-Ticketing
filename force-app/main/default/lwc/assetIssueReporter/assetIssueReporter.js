@@ -226,8 +226,25 @@ export default class AssetIssueReporter extends LightningElement {
     // eslint-disable-next-line no-undef
     this.canvasLayer = L.layerGroup().addTo(this.map);
 
-    this.drawCanvasMarker = (lat, lng) => {
-      // Remove any previous circle marker
+    // Inline SVG pin — injected as raw HTML to bypass LWS/Experience Cloud
+    // img-src rewriting that breaks the standard Leaflet icon pipeline.
+    const PIN_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 36" width="28" height="42">
+      <defs>
+        <radialGradient id="pinGrad" cx="40%" cy="30%" r="70%">
+          <stop offset="0%" stop-color="#ff6b6b"/>
+          <stop offset="100%" stop-color="#c0392b"/>
+        </radialGradient>
+        <filter id="pinShadow" x="-30%" y="-10%" width="160%" height="150%">
+          <feDropShadow dx="0" dy="3" stdDeviation="2" flood-color="rgba(0,0,0,0.35)"/>
+        </filter>
+      </defs>
+      <path d="M12 0C7.2 0 3 4.2 3 9c0 6.75 9 19.5 9 19.5S21 15.75 21 9c0-4.8-4.2-9-9-9z"
+            fill="url(#pinGrad)" filter="url(#pinShadow)"/>
+      <circle cx="12" cy="9" r="4" fill="#fff" opacity="0.9"/>
+    </svg>`;
+
+    this.drawPinMarker = (lat, lng) => {
+      // Remove any previous pin marker
       if (this.canvasMarker) {
         try {
           this.canvasLayer.removeLayer(this.canvasMarker);
@@ -238,16 +255,21 @@ export default class AssetIssueReporter extends LightningElement {
         this.canvasMarker = null;
       }
       // eslint-disable-next-line no-undef
-      const circle = L.circleMarker([lat, lng], {
-        radius: 8,
-        color: "#1b96ff",
-        weight: 2,
-        fillColor: "#1b96ff",
-        fillOpacity: 0.9,
-        interactive: false
+      const pinIcon = L.divIcon({
+        className: "premium-map-pin",
+        html: PIN_SVG,
+        iconSize: [28, 42],
+        iconAnchor: [14, 42],
+        popupAnchor: [0, -44]
       });
-      this.canvasMarker = circle.addTo(this.canvasLayer);
+      // eslint-disable-next-line no-undef
+      this.canvasMarker = L.marker([lat, lng], {
+        icon: pinIcon,
+        interactive: false
+      }).addTo(this.canvasLayer);
     };
+    // Alias for legacy call-sites that haven't been updated
+    this.drawCanvasMarker = this.drawPinMarker;
 
     // Track pointer start to distinguish intentional clicks from drags
     let startX = 0,
@@ -376,9 +398,9 @@ export default class AssetIssueReporter extends LightningElement {
   // Legacy image-based marker removed. Use canvas-based drawCanvasMarker everywhere.
   setMarker(lat, lng, fromUserInteraction = false) {
     try {
-      // Draw the canvas marker instead
-      if (typeof this.drawCanvasMarker === "function") {
-        this.drawCanvasMarker(lat, lng);
+      // Draw the premium pin marker
+      if (typeof this.drawPinMarker === "function") {
+        this.drawPinMarker(lat, lng);
       }
       this.applyLocation(lat, lng);
       if (fromUserInteraction) {
@@ -462,6 +484,7 @@ export default class AssetIssueReporter extends LightningElement {
       }
     }
     this.canvasMarker = null;
+    this.drawPinMarker = null;
 
     this.latitude = null;
     this.longitude = null;
@@ -500,8 +523,8 @@ export default class AssetIssueReporter extends LightningElement {
         typeof center.lat === "number" &&
         typeof center.lng === "number"
       ) {
-        // Draw canvas-based marker at center and update state
-        this.drawCanvasMarker(center.lat, center.lng);
+        // Draw premium pin marker at center and update state
+        this.drawPinMarker(center.lat, center.lng);
         this.applyLocation(center.lat, center.lng);
         const msg = `Marker placed at center (${center.lat.toFixed(6)}, ${center.lng.toFixed(6)}).`;
         this.dispatchEvent(
@@ -777,6 +800,7 @@ export default class AssetIssueReporter extends LightningElement {
     this.latitude = null;
     this.longitude = null;
     this.canvasMarker = null;
+    this.drawPinMarker = null;
     this.mapInitialized = false;
     this.map = null;
     this.filePreviews = [];

@@ -249,20 +249,38 @@
   will-change: transform;
 }
 
-/* Crosshair for Map Center */
+/* Crosshair for Map Center — refined target ring */
 .crosshair-circle {
   pointer-events: none;
   position: absolute; /* stylelint-disable-line */
   top: 50%;
   left: 50%;
-  width: 24px;
-  height: 24px;
-  margin-left: -12px;
-  margin-top: -12px;
-  border: 2px solid #3b82f6;
+  width: 28px;
+  height: 28px;
+  margin-left: -14px;
+  margin-top: -14px;
+  border: 2.5px solid rgba(220, 53, 69, 0.75);
   border-radius: 50%;
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+  box-shadow:
+    0 0 0 5px rgba(220, 53, 69, 0.12),
+    0 0 12px 2px rgba(220, 53, 69, 0.18);
   z-index: 1000;
+  animation: targetPulse 2s ease-in-out infinite;
+}
+
+@keyframes targetPulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 5px rgba(220, 53, 69, 0.12),
+      0 0 12px 2px rgba(220, 53, 69, 0.18);
+  }
+
+  50% {
+    box-shadow:
+      0 0 0 9px rgba(220, 53, 69, 0.06),
+      0 0 20px 4px rgba(220, 53, 69, 0.12);
+  }
 }
 
 .crosshair-x {
@@ -272,7 +290,7 @@
   left: 0;
   right: 0;
   height: 0;
-  border-top: 1px dashed rgba(59, 130, 246, 0.5);
+  border-top: 1px solid rgba(220, 53, 69, 0.3);
   z-index: 999;
 }
 
@@ -283,8 +301,72 @@
   top: 0;
   bottom: 0;
   width: 0;
-  border-left: 1px dashed rgba(59, 130, 246, 0.5);
+  border-left: 1px solid rgba(220, 53, 69, 0.3);
   z-index: 999;
+}
+
+/* Premium divIcon pin — drop animation + pulse shadow */
+.premium-map-pin {
+  /* Reset Leaflet default divIcon background/border */
+  background: none !important;
+  border: none !important;
+
+  /* Preserve pin tip as anchor point */
+  overflow: visible;
+
+  /* Trigger drop animation when marker is first added */
+  animation: dropIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  transform-origin: center bottom;
+
+  /* Attach continuous shadow pulse to the tiny pseudo-element below pin tip */
+  position: relative; /* stylelint-disable-line */
+}
+
+.premium-map-pin::after {
+  content: "";
+  position: absolute; /* stylelint-disable-line */
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 50%;
+  filter: blur(3px);
+  animation: pinShadowPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes dropIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-60px) scaleY(1.15);
+  }
+
+  60% {
+    transform: translateY(6px) scaleY(0.92);
+  }
+
+  80% {
+    transform: translateY(-3px) scaleY(1.04);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+  }
+}
+
+@keyframes pinShadowPulse {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: translateX(-50%) scaleX(1);
+  }
+
+  50% {
+    opacity: 0.2;
+    transform: translateX(-50%) scaleX(0.7);
+  }
 }
 
 /* Glass panel states */
