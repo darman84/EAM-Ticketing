@@ -653,6 +653,17 @@ export default class AssetIssueReporter extends LightningElement {
 
     if (!incoming.length) return;
 
+    // Warn if selection had to be trimmed to fit the remaining slots
+    if (incoming.length > remaining) {
+      this.dispatchEvent(
+        new ShowToastEvent({
+          title: "File Limit Reached",
+          message: `You can upload a maximum of ${MAX_FILES} photos. Only the first ${remaining} file(s) were added.`,
+          variant: "warning"
+        })
+      );
+    }
+
     const newPreviews = await Promise.all(
       incoming.map(async (f) => {
         const base64 = await this.readFileAsBase64(f);
