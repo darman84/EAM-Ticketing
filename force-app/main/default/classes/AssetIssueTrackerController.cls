@@ -66,13 +66,22 @@ public without sharing class AssetIssueTrackerController {
       }
 
       List<ContentVersion> cvs = [
-        SELECT Id
+        SELECT Id, VersionData, FileExtension
         FROM ContentVersion
         WHERE ContentDocumentId IN :docIds AND IsLatest = TRUE
       ];
 
       for (ContentVersion cv : cvs) {
-        result.imageUrls.add('/sfc/servlet.shepherd/version/download/' + cv.Id);
+        String mimeType = 'image/png';
+        if (String.isNotBlank(cv.FileExtension)) {
+          String ext = cv.FileExtension.toLowerCase();
+          if (ext == 'jpg' || ext == 'jpeg')
+            mimeType = 'image/jpeg';
+          else if (ext == 'gif')
+            mimeType = 'image/gif';
+        }
+        String base64Data = EncodingUtil.base64Encode(cv.VersionData);
+        result.imageUrls.add('data:' + mimeType + ';base64,' + base64Data);
       }
     }
 

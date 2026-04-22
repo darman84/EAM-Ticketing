@@ -30,7 +30,7 @@ export default class AssetIssueTracker extends LightningElement {
       getIssueDetails({ trackingId: this.trackingId })
         .then((result) => {
           if (result) {
-            this.issueDetails = result;
+            this.issueDetails = { ...result };
           } else {
             this.error = "No ticket found for this ID.";
           }
