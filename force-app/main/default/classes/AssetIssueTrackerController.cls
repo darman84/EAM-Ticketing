@@ -46,7 +46,7 @@ public without sharing class AssetIssueTrackerController {
     result.trackingId = issue.External_EAM_ID__c;
     result.status = String.isNotBlank(issue.EAM_Status__c)
       ? issue.EAM_Status__c
-      : 'Pending Review';
+      : 'New';
     result.assetType = issue.Asset_Type__c;
     result.severity = issue.Severity__c;
     result.techNotes = issue.EAM_Tech_Notes__c;
