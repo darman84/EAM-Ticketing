@@ -13,7 +13,7 @@
   - `Severity__c` - `Picklist` - Indicates the urgency (Routine, Urgent, Emergency).
   - `Description__c` - `Long Text Area` - Stores the detailed description of the reported issue.
   - `Submitter_Email__c` - `Email` - Captures the submitter's email address for status update notifications.
-  - `EAM_Status__c` - `Text(255)` - Tracks the operational status returned from the external EAM system. Defaults to **"New"** on record creation. Accepts any string value pushed by the EAM via `EAMStatusUpdateAPI`.
+  - `EAM_Status__c` - `Text(255)` - Tracks the operational status returned from the external EAM system. Defaults to **"New"** on record creation. Accepts any string value pushed by the EAM via `EAMStatusUpdateAPI`. _(Note: A conversion to a Picklist was attempted but reverted due to conflicts with existing data)._
   - `EAM_Tech_Notes__c` - `Long Text Area` - Stores notes from the internal technicians via EAM.
   - `Sync_Status__c` - `Picklist` - Tracks the integration status with the external EAM (Pending, Success, Failed).
   - `External_EAM_ID__c` - `Text` - Stores the unique identifier returned from the EAM system (Unique, External ID).
@@ -21,7 +21,7 @@
 
 ## Components & Logic
 
-- **`assetIssueReporter` (LWC):** Provides the mobile-responsive form and interactive map for issue submission. Gathers inputs and submits a JSON payload to the Apex facade, bypassing standard Guest User CRUD constraints. After submission, polls `AssetIssueTrackerController.pollForTrackingId` up to 10 times (1-second intervals) with a visual spinner until the EAM Tracking ID is returned, then displays it on the confirmation screen.
+- **`assetIssueReporter` (LWC):** Provides the mobile-responsive form and interactive map for issue submission. Uses a `preferCanvas: true` Leaflet map with stacked `L.circleMarker` pins to bypass Lightning Web Security (LWS) DOM-injection restrictions. Client-side logic allows users to sequentially append and remove photo uploads, which are Base64 encoded before submission. Gathers inputs and submits a JSON payload to the Apex facade, bypassing standard Guest User CRUD constraints. After submission, polls `AssetIssueTrackerController.pollForTrackingId` up to 10 times (1-second intervals) with a visual spinner until the EAM Tracking ID is returned, then displays it on the confirmation screen alongside an open-source GitHub reference link.
 - **`assetIssueTracker` (LWC):** A public-facing ticket status page placed at `/s/ticket-status` in Experience Cloud. Accepts an EAM Tracking ID via URL query parameter (`?id=`) using `CurrentPageReference` wire, calls `AssetIssueTrackerController.getIssueDetails`, and renders ticket status, asset type, severity, description, technician notes, and a photo gallery. Images are delivered as Base64 data URIs to bypass Experience Cloud guest file-access restrictions.
 - **`Asset_Issue_Routing_and_Sync` (Flow):** An After-Save Record-Triggered Flow (`CreateAndUpdate`) with three branches: (1) **New Record** — routes to the correct departmental queue and calls the EAM integration; (2) **Sync Success** — sends the confirmation email when `Sync_Status__c` changes to `Success` and `Submitter_Email__c` is populated; (3) **Status Updated** — sends a status update email when `EAM_Status__c` changes and `Submitter_Email__c` is populated.
 - **`AssetIssueFacade.cls`:** An Apex class running `without sharing` to safely insert `Asset_Issue__c` records and attach files (`ContentVersion` via `FirstPublishLocationId`) for guest users. Sets `ContentDocumentLink.Visibility = 'AllUsers'` post-insertion for community file access. Methods: `createIssueWithFiles` and `createIssueWithFilesFromJson`. Enforces allowlisted picklist values, max file count (5), max file size (4 MB), and permitted MIME types (JPEG, PNG).
@@ -64,3 +64,7 @@ Both templates are **Lightning Email Templates** (`uiType: SFX`) using Handlebar
 - Grant the Site Guest User Apex Class Access to both `AssetIssueFacade` and `AssetIssueTrackerController`.
 - Enable "Track Activities" on the `Asset_Issue__c` object in Object Manager.
 - After activation, the public portal is accessible at `https://<your-site-domain>/s/` and the tracker at `https://<your-site-domain>/s/ticket-status?id=<EAM-ID>`.
+
+## Development Tools
+
+The project contains a `.vscode/tasks.json` file for standardized developer workflows. This includes pre-configured tasks accessible via the VS Code Command Palette for pulling/deploying metadata, formatting with Prettier, linting with ESLint, and executing unit tests, all of which can be orchestrated sequentially using the "Full Pre-Deploy Check" compound workflow.

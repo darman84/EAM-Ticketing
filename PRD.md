@@ -3,7 +3,7 @@
 ## Goal
 
 - **What:** A Salesforce-to-EAM Infrastructure Ticketing System using Experience Cloud, Lightning Web Components, and asynchronous Apex integration.
-- **Why:** To modernize municipal public works requests by bridging citizen/field-reported infrastructure issues in Salesforce with backend Enterprise Asset Management (EAM) systems, reducing manual data entry and automating routing.
+- **Why:** To modernize municipal public works requests by bridging citizen/field-reported infrastructure issues in Salesforce with backend Enterprise Asset Management (EAM) systems, reducing manual data entry and automating routing. **Note: This project is intended to be a replacement for Fix It Plano.**
 
 ## Requirements
 
@@ -11,11 +11,12 @@
 
 - Public Intake Portal via an Experience Cloud site for unauthenticated guest users.
 - Mobile-Responsive UI with a custom Lightning Web Component (LWC) featuring client-side validation and a premium light theme.
-- Interactive Map Location using LWS-compliant Leaflet map integration with canvas-based markers.
+- Interactive Map Location using LWS-compliant Leaflet map integration with a stacked `L.circleMarker` approach utilizing Leaflet's internal Canvas renderer.
 - Guest-Safe Submission Path using an Apex facade running in system context to avoid CRUD/file permission constraints.
-- File Attachment Support allowing citizens to upload up to 5 photos (JPEG/PNG, max 4 MB each) with submissions, stored as Salesforce Files and accessible by guest users via Base64 encoded delivery.
+- File Attachment Support allowing citizens to sequentially append and individually remove up to 5 photos (JPEG/PNG, max 4 MB each) with submissions, stored as Salesforce Files and accessible by guest users via Base64 encoded delivery.
 - Automated Triage & Notifications via Salesforce Flow to route records to specific departmental queues (Signage, Water/Sewer, Pavement) and send status update emails to submitters.
-- EAM Tracking ID surfaced to citizen after submission via a 1-2 second polling mechanism on the confirmation screen.
+- EAM Tracking ID surfaced to citizen after submission via a polling mechanism (up to 10 seconds) on the confirmation screen.
+- Open-Source Reference link to the GitHub repository is provided on the final confirmation screen.
 - Confirmation Email sent only after successful EAM sync, containing the generated EAM Tracking ID and a deep-link URL to the public ticket status page.
 - Status Update Email sent on every `EAM_Status__c` change, including the EAM Tracking ID and a deep-link to the tracker.
 - Public Ticket Status Page at `/s/ticket-status?id=<EAM_ID>` displaying full ticket details (status, asset type, severity, description, tech notes, and photo gallery) via the `assetIssueTracker` LWC.

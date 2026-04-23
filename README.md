@@ -1,6 +1,8 @@
 # Salesforce-to-EAM Infrastructure Ticketing System
 
-Salesforce-to-EAM Infrastructure Ticketing System is a proof-of-concept Salesforce application designed to modernize municipal public works requests by bridging citizen-reported infrastructure anomalies with a backend Enterprise Asset Management (EAM) system.
+Salesforce-to-EAM Infrastructure Ticketing System is a proof-of-concept Salesforce application designed to modernize municipal public works requests by bridging citizen-reported infrastructure anomalies with a backend Enterprise Asset Management (EAM) system. **Note: This project is intended to be a replacement for Fix It Plano.**
+
+**Live Demo:** [https://orgfarm-1d35f15b8b-dev-ed.develop.my.site.com/s](https://orgfarm-1d35f15b8b-dev-ed.develop.my.site.com/s)
 
 ## Documentation
 
@@ -31,12 +33,21 @@ Manual Configuration (Post-Deployment):
 - Set the appropriate time zone on the Experience Cloud site.
 - Once activated, your public portal will be available at `https://<your-experience-site-domain>/s/` and the tracker at `https://<your-experience-site-domain>/s/ticket-status?id=<EAM-ID>`.
 
+## Developer Workflow
+
+This project includes pre-configured VS Code tasks (`.vscode/tasks.json`) to streamline development operations. You can run these directly from the Command Palette (`Tasks: Run Task`):
+
+- **Retrieve / Deploy:** Standard commands to pull/push metadata.
+- **Code Quality:** Format with Prettier and lint with ESLint.
+- **Testing:** Run Apex unit tests or LWC unit tests.
+- **Compound Workflows:** "Full Pre-Deploy Check" runs formatting, linting, tests, and deployment sequentially.
+
 ## Usage
 
 The application features a public-facing portal for citizens to intake and track infrastructure issues:
 
-1. Navigate to the Experience Cloud site and fill out the mobile-responsive form — including asset type, severity, description, optional contact email, optional photo uploads, and an interactive Leaflet.js-powered map for geolocation.
-2. Submit the form. A spinner appears while the system polls for the generated EAM Tracking ID (up to 10 seconds). The ID is displayed on the confirmation screen once available.
+1. Navigate to the Experience Cloud site and fill out the mobile-responsive form — including asset type, severity, description, optional contact email, an interactive Leaflet.js-powered map for geolocation, and the ability to sequentially append up to 5 optional photo uploads.
+2. Submit the form. A spinner appears while the system polls for the generated EAM Tracking ID (up to 10 seconds). The ID and a link to the open-source GitHub repository are displayed on the confirmation screen once available.
 3. A background Queueable Apex job integrates the submission with the external EAM system asynchronously. Upon success, a confirmation email is sent to the submitter (if provided) containing the EAM Tracking ID and a link to the public tracker.
 4. The submitter can visit `<site-url>/s/ticket-status?id=<EAM-ID>` at any time to view full ticket details, including status, technician notes, and attached photos.
 5. When the ticket status is updated by the EAM system (via the REST API), an automated status notification email is sent to the submitter.
