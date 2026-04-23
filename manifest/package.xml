@@ -2,7 +2,9 @@
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
         <members>AssetIssueFacade</members>
+        <members>AssetIssueFacade_Test</members>
         <members>AssetIssueTrackerController</members>
+        <members>AssetIssueTrackerController_Test</members>
         <members>EAMCalloutService</members>
         <members>EAMIntegrationRouter</members>
         <members>EAMIntegration_Test</members>

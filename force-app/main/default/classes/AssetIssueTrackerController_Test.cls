@@ -60,7 +60,7 @@ private class AssetIssueTrackerController_Test {
   }
 
   @IsTest
-  static void testGetIssueDetails_StatusDefaultsTosPendingReview_WhenNoEAMStatus() {
+  static void testGetIssueDetails_StatusDefaultsToNew_WhenNoEAMStatus() {
     Asset_Issue__c issue = new Asset_Issue__c(
       Asset_Type__c = 'Pavement',
       Severity__c = 'Urgent',
@@ -77,9 +77,9 @@ private class AssetIssueTrackerController_Test {
     Test.stopTest();
 
     System.assertEquals(
-      'Pending Review',
+      'New',
       result.status,
-      'Status should default to Pending Review when null'
+      'Status should default to New when null'
     );
   }
 

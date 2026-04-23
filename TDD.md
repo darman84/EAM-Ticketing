@@ -13,7 +13,7 @@
   - `Severity__c` - `Picklist` - Indicates the urgency (Routine, Urgent, Emergency).
   - `Description__c` - `Long Text Area` - Stores the detailed description of the reported issue.
   - `Submitter_Email__c` - `Email` - Captures the submitter's email address for status update notifications.
-  - `EAM_Status__c` - `Picklist` - Tracks the operational status returned from the external EAM system.
+  - `EAM_Status__c` - `Text(255)` - Tracks the operational status returned from the external EAM system. Defaults to **"New"** on record creation. Accepts any string value pushed by the EAM via `EAMStatusUpdateAPI`.
   - `EAM_Tech_Notes__c` - `Long Text Area` - Stores notes from the internal technicians via EAM.
   - `Sync_Status__c` - `Picklist` - Tracks the integration status with the external EAM (Pending, Success, Failed).
   - `External_EAM_ID__c` - `Text` - Stores the unique identifier returned from the EAM system (Unique, External ID).
@@ -63,3 +63,4 @@ Both templates are **Lightning Email Templates** (`uiType: SFX`) using Handlebar
 - Create a "Build Your Own (Aura)" Experience Cloud site. Place the `assetIssueReporter` LWC on the home page. Create a new Standard Page named `Ticket Status` (URL slug: `ticket-status`) and place the `assetIssueTracker` LWC on it.
 - Grant the Site Guest User Apex Class Access to both `AssetIssueFacade` and `AssetIssueTrackerController`.
 - Enable "Track Activities" on the `Asset_Issue__c` object in Object Manager.
+- After activation, the public portal is accessible at `https://<your-site-domain>/s/` and the tracker at `https://<your-site-domain>/s/ticket-status?id=<EAM-ID>`.
