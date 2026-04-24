@@ -1,0 +1,20 @@
+<template>
+  <lightning-card
+    title="Asset Triage Dashboard"
+    icon-name="standard:service_territory_location"
+  >
+    <div class="slds-p-around_medium">
+      <template if:true={mapMarkers.length}>
+        <lightning-map
+          map-markers={mapMarkers}
+          markers-title="Asset Issues"
+          zoom-level="14"
+        >
+        </lightning-map>
+      </template>
+      <template if:false={mapMarkers.length}>
+        <p>Loading map or no spatial data available.</p>
+      </template>
+    </div>
+  </lightning-card>
+</template>
