@@ -136,4 +136,41 @@ public class EAMIntegration_Test {
       'Exactly 50 records should have processed in testing context due to test chaining bypass.'
     );
   }
+
+  @isTest
+  static void testDispatchUpdateSync() {
+    // 1. Setup Mock for a 200 OK response
+    Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator(200));
+
+    // 2. Pre-populate External_EAM_ID__c to simulate an already-synced record
+    Asset_Issue__c issue = new Asset_Issue__c(
+      Asset_Type__c = 'Signage',
+      Severity__c = 'Urgent',
+      Description__c = 'Dispatch Update Test',
+      External_EAM_ID__c = 'EAM-EXISTING-001'
+    );
+    insert issue;
+
+    // 3. Directly enqueue the service as a dispatch update (PATCH scenario)
+    Test.startTest();
+    System.enqueueJob(new EAMCalloutService(new List<Id>{ issue.Id }));
+    Test.stopTest();
+
+    // 4. Assert — status should be Success and the External ID must be unchanged
+    Asset_Issue__c result = [
+      SELECT Sync_Status__c, External_EAM_ID__c
+      FROM Asset_Issue__c
+      WHERE Id = :issue.Id
+    ];
+    System.assertEquals(
+      'Success',
+      result.Sync_Status__c,
+      'Dispatch update should succeed with a 200 response.'
+    );
+    System.assertEquals(
+      'EAM-EXISTING-001',
+      result.External_EAM_ID__c,
+      'External ID must remain unchanged after a PATCH dispatch update.'
+    );
+  }
 }

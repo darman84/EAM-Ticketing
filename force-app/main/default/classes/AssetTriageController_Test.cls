@@ -90,4 +90,46 @@ public class AssetTriageController_Test {
       );
     }
   }
+
+  @isTest
+  static void testGetNearbyHistoricalIssues_NoLocation() {
+    // A record with no geolocation should immediately return an empty list
+    Asset_Issue__c noLocIssue = new Asset_Issue__c(
+      Asset_Type__c = 'Signage',
+      Severity__c = 'Routine',
+      Description__c = 'No Location Issue'
+      // Location__Latitude__s and Location__Longitude__s intentionally omitted
+    );
+    insert noLocIssue;
+
+    Test.startTest();
+    List<Asset_Issue__c> results = AssetTriageController.getNearbyHistoricalIssues(
+      noLocIssue.Id
+    );
+    Test.stopTest();
+
+    System.assertEquals(
+      0,
+      results.size(),
+      'Record with no location should return an empty list.'
+    );
+  }
+
+  @isTest
+  static void testGetNearbyHistoricalIssues_InvalidId() {
+    // A non-existent record ID should return an empty list gracefully
+    Id fakeId = '001000000000000AAA';
+
+    Test.startTest();
+    List<Asset_Issue__c> results = AssetTriageController.getNearbyHistoricalIssues(
+      fakeId
+    );
+    Test.stopTest();
+
+    System.assertEquals(
+      0,
+      results.size(),
+      'Invalid record ID should return an empty list without throwing.'
+    );
+  }
 }
