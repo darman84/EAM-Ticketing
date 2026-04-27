@@ -80,7 +80,7 @@ export default class AssetIssueReporter extends LightningElement {
         label: "Litter or Debris on Street",
         value: "Litter or Debris on Street",
         description:
-          "Report litter or debris that is in street/roadway. If this is an emergency after hours that needs immediate attention, please call Ridgeview Pump Station at 972-727-1623."
+          "Report litter or debris that is in street/roadway. If this is an emergency after hours that needs immediate attention, please call Ridgeview Pump Station at XXX-XXX-XXXX."
       },
       {
         label: "Median/Right Of Way Maintenance",
@@ -127,7 +127,7 @@ export default class AssetIssueReporter extends LightningElement {
         label: "Traffic Signal Issues",
         value: "Traffic Signal Issues",
         description:
-          "Please call the following numbers to report traffic signal flashing or dark. 7am to 5pm weekdays – 972-769-4160. After hours call 972-727-1623."
+          "Please call the following numbers to report traffic signal flashing or dark. 7am to 5pm weekdays – XXX-XXX-XXXX. After hours call XXX-XXX-XXXX."
       },
       {
         label: "Street Marking Issue",
@@ -187,13 +187,13 @@ export default class AssetIssueReporter extends LightningElement {
         label: "Sewer Stoppage/Overflow",
         value: "Sewer Stoppage/Overflow",
         description:
-          "For large volume of flow please call the numbers below: 7am-5pm weekdays - call 972-769-4160 After hours - call 972-727-1623"
+          "For large volume of flow please call the numbers below: 7am-5pm weekdays - call XXX-XXX-XXXX After hours - call XXX-XXX-XXXX"
       },
       {
         label: "Water Leaks",
         value: "Water Leaks",
         description:
-          "DO NOT ENTER Water Leak information here. Please call the following numbers to report a water leak so that we can promptly respond. 7am-5pm weekdays - call 972-769-4160. After hours - call 972-727-1623."
+          "DO NOT ENTER Water Leak information here. Please call the following numbers to report a water leak so that we can promptly respond. 7am-5pm weekdays - call XXX-XXX-XXXX. After hours - call XXX-XXX-XXXX."
       },
       {
         label: "Water Meter Boxes/Lids",
@@ -210,7 +210,7 @@ export default class AssetIssueReporter extends LightningElement {
         label: "Water Shut Off Request (non-emergency)",
         value: "Water Shut Off Request (non-emergency)",
         description:
-          "Call 972-769-4160 for emergency shut off during normal business hours (Monday-Friday, 8:00am-5:00pm). Call 972-727-1623 for emergency shut off after normal business hours."
+          "Call XXX-XXX-XXXX for emergency shut off during normal business hours (Monday-Friday, 8:00am-5:00pm). Call XXX-XXX-XXXX for emergency shut off after normal business hours."
       },
       {
         label: "Fire Hydrant Issue",
