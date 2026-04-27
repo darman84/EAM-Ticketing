@@ -28,7 +28,7 @@ public class EAMCalloutService implements Queueable, Database.AllowsCallouts {
 
     // Query the records passed in
     List<Asset_Issue__c> issues = [
-      SELECT Id, Asset_Type__c, Severity__c, Description__c
+      SELECT Id, Asset_Type__c, Severity__c, Description__c, External_EAM_ID__c
       FROM Asset_Issue__c
       WHERE Id IN :idsToProcess
     ];
@@ -38,7 +38,9 @@ public class EAMCalloutService implements Queueable, Database.AllowsCallouts {
     for (Asset_Issue__c issue : issues) {
       HttpRequest req = new HttpRequest();
       req.setEndpoint('callout:EAM_Mock_Endpoint');
-      req.setMethod('POST');
+
+      Boolean isUpdate = String.isNotBlank(issue.External_EAM_ID__c);
+      req.setMethod(isUpdate ? 'PATCH' : 'POST');
       req.setHeader('Content-Type', 'application/json');
 
       // Construct the JSON Payload
@@ -51,6 +53,10 @@ public class EAMCalloutService implements Queueable, Database.AllowsCallouts {
         'timestamp' => Datetime.now().formatGmt('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'')
       };
 
+      if (isUpdate) {
+        payload.put('external_id', issue.External_EAM_ID__c);
+      }
+
       req.setBody(JSON.serialize(payload));
 
       try {
@@ -58,8 +64,10 @@ public class EAMCalloutService implements Queueable, Database.AllowsCallouts {
 
         if (res.getStatusCode() == 200) {
           issue.Sync_Status__c = 'Success';
-          // Use the Salesforce ID to guarantee uniqueness in bulk processing
-          issue.External_EAM_ID__c = 'EAM-MOCK-' + issue.Id;
+          if (!isUpdate) {
+            // Use the Salesforce ID to guarantee uniqueness in bulk processing
+            issue.External_EAM_ID__c = 'EAM-MOCK-' + issue.Id;
+          }
         } else {
           issue.Sync_Status__c = 'Failed';
         }

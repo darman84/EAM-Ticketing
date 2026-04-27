@@ -15,7 +15,7 @@
     "retrieve": "sf project retrieve start --manifest manifest/package.xml",
     "deploy": "sf project deploy start --manifest manifest/package.xml",
     "deploy:validate": "sf project deploy validate --manifest manifest/package.xml",
-    "test:apex": "sf apex run test --class-names AssetIssueFacade_Test AssetIssueTrackerController_Test EAMIntegration_Test EAMStatusUpdateAPI_Test --result-format human --code-coverage",
+    "test:apex": "sf apex run test --class-names AssetIssueFacade_Test AssetIssueTrackerController_Test EAMIntegration_Test EAMStatusUpdateAPI_Test AssetTriageController_Test --result-format human --code-coverage",
     "prepare": "git config core.hooksPath .husky && husky || true",
     "precommit": "lint-staged"
   },

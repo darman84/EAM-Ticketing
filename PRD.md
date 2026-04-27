@@ -1,40 +1,47 @@
+### PRD.md
+
 # Product Requirements Document
 
 ## Goal
 
-- **What:** A Salesforce-to-EAM Infrastructure Ticketing System using Experience Cloud, Lightning Web Components, and asynchronous Apex integration.
-- **Why:** To modernize municipal public works requests by bridging citizen/field-reported infrastructure issues in Salesforce with backend Enterprise Asset Management (EAM) systems, reducing manual data entry and automating routing. **Note: This project is intended to be a replacement for Fix It Plano.**
+- **What:** A comprehensive Salesforce-to-EAM Infrastructure Ticketing System featuring a public Experience Cloud intake portal, an internal Service Cloud dispatch console, and asynchronous API integrations.
+- **Why:** To modernize municipal public works requests by bridging citizen/field-reported infrastructure issues in Salesforce with backend Enterprise Asset Management (EAM) systems, reducing manual data entry, automating Omni-Channel routing for supervisors, and maintaining robust CI/CD deployment pipelines. **Note: This project is intended to be a replacement for Fix It Plano.**
 
 ## Requirements
 
 ### Must Have
 
+**Phase 1: Public Intake & Tracking**
+
 - Public Intake Portal via an Experience Cloud site for unauthenticated guest users.
-- Mobile-Responsive UI with a custom Lightning Web Component (LWC) featuring client-side validation and a premium light theme.
-- Interactive Map Location using LWS-compliant Leaflet map integration with a stacked `L.circleMarker` approach utilizing Leaflet's internal Canvas renderer.
-- Guest-Safe Submission Path using an Apex facade running in system context to avoid CRUD/file permission constraints.
-- File Attachment Support allowing citizens to sequentially append and individually remove up to 5 photos (JPEG/PNG, max 4 MB each) with submissions, stored as Salesforce Files and accessible by guest users via Base64 encoded delivery.
-- Automated Triage & Notifications via Salesforce Flow to route records to specific departmental queues (Signage, Water/Sewer, Pavement) and send status update emails to submitters.
-- EAM Tracking ID surfaced to citizen after submission via a polling mechanism (up to 10 seconds) on the confirmation screen.
-- Open-Source Reference link to the GitHub repository is provided on the final confirmation screen.
-- Confirmation Email sent only after successful EAM sync, containing the generated EAM Tracking ID and a deep-link URL to the public ticket status page.
-- Status Update Email sent on every `EAM_Status__c` change, including the EAM Tracking ID and a deep-link to the tracker.
-- Public Ticket Status Page at `/s/ticket-status?id=<EAM_ID>` displaying full ticket details (status, asset type, severity, description, tech notes, and photo gallery) via the `assetIssueTracker` LWC.
-- Asynchronous EAM Integration via Apex REST callouts for pushing JSON payloads without disrupting user experience.
-- Bulk Data Resilience to support operations of up to 100 records per transaction without exceeding governor limits.
+- Mobile-Responsive UI with a custom Lightning Web Component (LWC) featuring client-side validation.
+- Interactive Map Location using LWS-compliant Leaflet map integration (`L.circleMarker`).
+- Guest-Safe Submission Path using an Apex facade running in system context.
+- File Attachment Support allowing up to 5 photos (JPEG/PNG, max 4 MB each), accessible by guest users via Base64 encoded delivery.
+- Automated Triage & Notifications via Salesforce Flow to route records to departmental queues.
+- EAM Tracking ID surfaced to citizen via a polling mechanism.
+- Status Update Emails sent on every `EAM_Status__c` change.
+- Public Ticket Status Page at `/s/ticket-status?id=<EAM_ID>` displaying full ticket details and photo gallery.
+
+**Phase 2: Service Cloud Triage & DevOps**
+
+- **Omni-Channel Routing:** Implementation of Service Cloud Omni-Channel to automatically push incoming `Asset_Issue__c` records to available supervisors based on queue assignment (Signage, Water/Sewer, Pavement).
+- **Internal Triage Dashboard LWC:** A custom Lightning Web Component deployed in the Service Console that displays the selected issue's spatial location on a map alongside historical maintenance context for accurate dispatching.
+- **Dispatch API Sync:** Asynchronous Apex integration (Queueable) that pushes the finalized dispatch details to the mock EAM system.
+- **CI/CD Pipeline:** A GitHub Actions workflow configured to automatically format, lint, test, and deploy code to the Salesforce org upon merges to the main branch.
 
 ### Nice to Have
 
-- Bi-directional syncing (EAM to Salesforce updates) - Currently out of scope.
-- Authenticated citizen portals (Citizen login/accounts) - Currently out of scope.
+- Bi-directional syncing (EAM to Salesforce updates) - _Currently handled via REST endpoint._
+- Authenticated citizen portals (Citizen login/accounts) - _Out of scope._
 - Integration with a live production EAM (currently utilizing a mock endpoint).
 
 ## User Flow
 
-1. Citizen or field tech submits an infrastructure issue via the mobile-friendly public web form (LWC), including dropping a pin on an interactive Leaflet map and optionally attaching photos.
-2. The system's Apex facade safely records the issue and any file attachments in system context, configuring file visibility for guest access.
-3. Salesforce automatically routes the ticket to the correct maintenance queue based on asset type, while a background Queueable Apex job syncs the ticket to the external EAM system and updates the `Sync_Status__c` and `External_EAM_ID__c`.
-4. The submission UI polls for the EAM Tracking ID (up to 10 seconds) and displays it on the confirmation screen.
-5. Once the EAM sync succeeds, the citizen receives a confirmation email with their EAM Tracking ID and a link to view their ticket online.
-6. The citizen can visit the public `/s/ticket-status` page at any time to view their ticket status, technician notes, and attached photos.
-7. When technicians update the ticket status via the EAM system, the citizen receives an automated status update notification email.
+1. Citizen or field tech submits an infrastructure issue via the mobile-friendly public web form (LWC), dropping a pin on a Leaflet map and attaching photos.
+2. The Apex facade safely records the issue in system context. Salesforce routes the ticket to the correct maintenance queue based on asset type.
+3. The citizen receives their tracking ID and a confirmation email to view their ticket status online.
+4. **[Internal]** A public works supervisor logs into the Service Console and goes active on Omni-Channel.
+5. **[Internal]** The new ticket is routed to the supervisor's workspace. They review the issue using the **Asset Triage Dashboard** to analyze spatial data and historical context.
+6. **[Internal]** The supervisor approves and dispatches the ticket. A background Queueable Apex job syncs this dispatch event to the external EAM system.
+7. When field technicians update the ticket status via the EAM system, the EAM pushes the update back to Salesforce via a REST API, which emails the citizen.
