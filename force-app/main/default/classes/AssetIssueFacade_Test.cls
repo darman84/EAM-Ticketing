@@ -13,7 +13,7 @@ private class AssetIssueFacade_Test {
   static void shouldCreateIssue_WhenValidMinimalInput_NoFiles() {
     // Given
     AssetIssueFacade.CreateIssueRequest req = new AssetIssueFacade.CreateIssueRequest();
-    req.assetType = 'Signage';
+    req.assetType = 'Street Sign Issues';
     req.severity = 'Routine';
     req.description = 'Pothole near the intersection';
     req.latitude = 33.0198;
@@ -51,7 +51,7 @@ private class AssetIssueFacade_Test {
       LIMIT 1
     ];
     Assert.areEqual(
-      'Signage',
+      'Street Sign Issues',
       created.Asset_Type__c,
       'Asset type should match input'
     );
@@ -80,7 +80,7 @@ private class AssetIssueFacade_Test {
   static void shouldCreateIssueAndAttachFiles_WhenValidJpegPng() {
     // Given
     AssetIssueFacade.CreateIssueRequest req = new AssetIssueFacade.CreateIssueRequest();
-    req.assetType = 'Water/Sewer';
+    req.assetType = 'Water Leaks';
     req.severity = 'Urgent';
     req.description = 'Leaking hydrant';
     req.files = new List<AssetIssueFacade.FilePart>();
@@ -165,7 +165,7 @@ private class AssetIssueFacade_Test {
     }
 
     // Invalid severity
-    req.assetType = 'Pavement';
+    req.assetType = 'Pothole Report';
     req.severity = 'Bad';
     try {
       AssetIssueFacade.createIssueWithFiles(req);
@@ -183,7 +183,7 @@ private class AssetIssueFacade_Test {
   static void shouldFail_WhenUnsupportedFileTypeOrOversize() {
     // Given: Unsupported content type
     AssetIssueFacade.CreateIssueRequest badTypeReq = new AssetIssueFacade.CreateIssueRequest();
-    badTypeReq.assetType = 'Signage';
+    badTypeReq.assetType = 'Street Sign Issues';
     badTypeReq.severity = 'Routine';
     badTypeReq.description = 'Test';
     badTypeReq.files = new List<AssetIssueFacade.FilePart>{
@@ -209,7 +209,7 @@ private class AssetIssueFacade_Test {
     Integer size = 4 * 1024 * 1024 + 1;
     Blob bigBlob = Blob.valueOf(String.valueOf(size).leftPad(size, 'a'));
     AssetIssueFacade.CreateIssueRequest oversizeReq = new AssetIssueFacade.CreateIssueRequest();
-    oversizeReq.assetType = 'Pavement';
+    oversizeReq.assetType = 'Pothole Report';
     oversizeReq.severity = 'Emergency';
     oversizeReq.description = 'Oversize file test';
     oversizeReq.files = new List<AssetIssueFacade.FilePart>{
@@ -235,7 +235,7 @@ private class AssetIssueFacade_Test {
   @IsTest
   static void shouldCreateIssue_FromJsonString() {
     // Given
-    String reqJson = '{"assetType":"Pavement","severity":"Routine","description":"Test JSON","latitude":33.0,"longitude":-96.0,"submitterEmail":"test@test.com","files":[{"fileName":"test.png","contentType":"image/png","base64Data":"iVBORw0KGgo="}]}';
+    String reqJson = '{"assetType":"Pothole Report","severity":"Routine","description":"Test JSON","latitude":33.0,"longitude":-96.0,"submitterEmail":"test@test.com","files":[{"fileName":"test.png","contentType":"image/png","base64Data":"iVBORw0KGgo="}]}';
 
     // When
     Test.startTest();

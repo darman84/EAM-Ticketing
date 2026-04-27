@@ -11,7 +11,6 @@
   color: #0f172a;
 }
 
-
 /* Glass Card */
 .glass-card {
   position: relative; /* stylelint-disable-line */
@@ -573,4 +572,14 @@
   .submit-btn {
     width: 100%;
   }
+}
+
+.helper-text-box {
+  border-radius: var(--lwc-borderRadiusMedium, 0.25rem);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.helper-text {
+  font-weight: 500;
+  display: flex;
+  align-items: center;
 }

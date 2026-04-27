@@ -30,9 +30,36 @@ public without sharing class AssetIssueFacade {
     'image/png'
   };
   private static final Set<String> ALLOWED_ASSET_TYPES = new Set<String>{
-    'Signage',
-    'Water/Sewer',
-    'Pavement'
+    'Erosion/Creek Maintenance',
+    'Flooding Issues',
+    'Pollutant Discharge into Drainage System',
+    'ADA Access Issues',
+    'Construction on Streets',
+    'Curb Repair',
+    'Litter or Debris on Street',
+    'Median/Right Of Way Maintenance',
+    'Parking Signage Concerns',
+    'School Zone Signals',
+    'Screening Wall Maintenance',
+    'Storm Related Issues',
+    'Street Sign Issues',
+    'Traffic Safety',
+    'Traffic Signal Issues',
+    'Street Marking Issue',
+    'Sidewalk Repair Request',
+    'Pothole Report',
+    'Bulk Waste Violation',
+    'Cart Replacement - Damaged or Change Size',
+    'Hazardous Waste',
+    'Household Hazardous Waste Collection',
+    'Missed Collection',
+    'Locate Meters',
+    'Sewer Stoppage/Overflow',
+    'Water Leaks',
+    'Water Meter Boxes/Lids',
+    'Water Quality',
+    'Water Shut Off Request (non-emergency)',
+    'Fire Hydrant Issue'
   };
   private static final Set<String> ALLOWED_SEVERITIES = new Set<String>{
     'Routine',

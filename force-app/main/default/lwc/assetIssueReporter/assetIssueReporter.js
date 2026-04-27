@@ -14,8 +14,9 @@ export default class AssetIssueReporter extends LightningElement {
   @track showUpload = false;
   @track mapMarkers = [];
 
-  // New client-side form state
+  // Client-side form state
   @track form = {
+    category: "",
     assetType: "",
     severity: "",
     description: "",
@@ -24,16 +25,229 @@ export default class AssetIssueReporter extends LightningElement {
   @track filePreviews = [];
   submitting = false;
   trackingId = null;
-  // Private flags used previously for one-time console logs have been removed in cleanup
 
-  // Picklist options (mirror server allowlist used in Apex)
-  get assetTypeOptions() {
-    return [
-      { label: "Signage", value: "Signage" },
-      { label: "Water/Sewer", value: "Water/Sewer" },
-      { label: "Pavement", value: "Pavement" }
-    ];
+  // Constants for categories and issues
+  ISSUE_CATEGORIES = [
+    { label: "Storm Water/Drainage", value: "Storm Water/Drainage" },
+    { label: "Streets and Traffic", value: "Streets and Traffic" },
+    { label: "Trash & Recycling", value: "Trash & Recycling" },
+    {
+      label: "Utilities (Water and Sewer)",
+      value: "Utilities (Water and Sewer)"
+    }
+  ];
+
+  ISSUE_TYPES_BY_CATEGORY = {
+    "Storm Water/Drainage": [
+      {
+        label: "Erosion/Creek Maintenance",
+        value: "Erosion/Creek Maintenance",
+        description:
+          "Use this request type to report any erosion or creek maintenance issues."
+      },
+      {
+        label: "Flooding Issues",
+        value: "Flooding Issues",
+        description: "Use this request type to report any flooding issues."
+      },
+      {
+        label: "Pollutant Discharge into Drainage System",
+        value: "Pollutant Discharge into Drainage System",
+        description:
+          "Unauthorized discharge of detergent, fertilizer, filter backwash, oil, grease, paint, yard waste or chemicals into the stormwater system."
+      }
+    ],
+    "Streets and Traffic": [
+      {
+        label: "ADA Access Issues",
+        value: "ADA Access Issues",
+        description:
+          "Use this request type to report any Americans with Disabilities Act (ADA) access issues."
+      },
+      {
+        label: "Construction on Streets",
+        value: "Construction on Streets",
+        description:
+          "Use this request type to report any concerns associated with construction on streets."
+      },
+      {
+        label: "Curb Repair",
+        value: "Curb Repair",
+        description:
+          "Use this request type to report any curbs that are in need of repair or maintenance."
+      },
+      {
+        label: "Litter or Debris on Street",
+        value: "Litter or Debris on Street",
+        description:
+          "Report litter or debris that is in street/roadway. If this is an emergency after hours that needs immediate attention, please call Ridgeview Pump Station at 972-727-1623."
+      },
+      {
+        label: "Median/Right Of Way Maintenance",
+        value: "Median/Right Of Way Maintenance",
+        description:
+          "Use this request type to report any medians or public right of way that is in need of maintenance."
+      },
+      {
+        label: "Parking Signage Concerns",
+        value: "Parking Signage Concerns",
+        description:
+          "Use this request type to report any parking signage concerns."
+      },
+      {
+        label: "School Zone Signals",
+        value: "School Zone Signals",
+        description:
+          "Use this request type to report any issues with school zone signals."
+      },
+      {
+        label: "Screening Wall Maintenance",
+        value: "Screening Wall Maintenance",
+        description:
+          "Use this request type to report any screening walls that are in need of repair or maintenance."
+      },
+      {
+        label: "Storm Related Issues",
+        value: "Storm Related Issues",
+        description:
+          "If this is an emergency call 911. Otherwise, use this request type to report any storm-related issues such as flooded street, ice on roadway, tree blocking street, etc."
+      },
+      {
+        label: "Street Sign Issues",
+        value: "Street Sign Issues",
+        description: "Use this request type to report any street sign issues."
+      },
+      {
+        label: "Traffic Safety",
+        value: "Traffic Safety",
+        description:
+          "Use this to request a study of any Traffic Safety Issues related to signs, markings, or traffic signals. This is NOT to report damaged items."
+      },
+      {
+        label: "Traffic Signal Issues",
+        value: "Traffic Signal Issues",
+        description:
+          "Please call the following numbers to report traffic signal flashing or dark. 7am to 5pm weekdays – 972-769-4160. After hours call 972-727-1623."
+      },
+      {
+        label: "Street Marking Issue",
+        value: "Street Marking Issue",
+        description:
+          "Use this to report any problems with existing street markings, like crosswalks or lane markings."
+      },
+      {
+        label: "Sidewalk Repair Request",
+        value: "Sidewalk Repair Request",
+        description:
+          "Use this request type to report any issues that require sidewalk repair."
+      },
+      {
+        label: "Pothole Report",
+        value: "Pothole Report",
+        description:
+          "Use this request to report any potholes that are in need of repair."
+      }
+    ],
+    "Trash & Recycling": [
+      {
+        label: "Bulk Waste Violation",
+        value: "Bulk Waste Violation",
+        description:
+          "This includes - out of cycle trash piles, large brush, or bulky waste."
+      },
+      {
+        label: "Cart Replacement - Damaged or Change Size",
+        value: "Cart Replacement - Damaged or Change Size",
+        description:
+          'Report if a trash or recycle cart needs to be replaced because it is damaged or a different size is needed. Please specify "Trash" or "Recycle" or "Both" and what size is needed ("Same" or "Other").'
+      },
+      {
+        label: "Hazardous Waste",
+        value: "Hazardous Waste",
+        description: "Mercury thermometer or thermostat pick up request"
+      },
+      {
+        label: "Household Hazardous Waste Collection",
+        value: "Household Hazardous Waste Collection",
+        description: "Schedule Household Chemical Collection"
+      },
+      {
+        label: "Missed Collection",
+        value: "Missed Collection",
+        description: "Report missed trash or recycle service"
+      }
+    ],
+    "Utilities (Water and Sewer)": [
+      {
+        label: "Locate Meters",
+        value: "Locate Meters",
+        description: "Use this request to locate any water meters."
+      },
+      {
+        label: "Sewer Stoppage/Overflow",
+        value: "Sewer Stoppage/Overflow",
+        description:
+          "For large volume of flow please call the numbers below: 7am-5pm weekdays - call 972-769-4160 After hours - call 972-727-1623"
+      },
+      {
+        label: "Water Leaks",
+        value: "Water Leaks",
+        description:
+          "DO NOT ENTER Water Leak information here. Please call the following numbers to report a water leak so that we can promptly respond. 7am-5pm weekdays - call 972-769-4160. After hours - call 972-727-1623."
+      },
+      {
+        label: "Water Meter Boxes/Lids",
+        value: "Water Meter Boxes/Lids",
+        description:
+          "Use this request type to report any issues with a water meter box or a water meter box lid."
+      },
+      {
+        label: "Water Quality",
+        value: "Water Quality",
+        description: "Use this request type to report any water quality issues."
+      },
+      {
+        label: "Water Shut Off Request (non-emergency)",
+        value: "Water Shut Off Request (non-emergency)",
+        description:
+          "Call 972-769-4160 for emergency shut off during normal business hours (Monday-Friday, 8:00am-5:00pm). Call 972-727-1623 for emergency shut off after normal business hours."
+      },
+      {
+        label: "Fire Hydrant Issue",
+        value: "Fire Hydrant Issue",
+        description:
+          "Use this request type to report any issues with a fire hydrant."
+      }
+    ]
+  };
+
+  get categoryOptions() {
+    return this.ISSUE_CATEGORIES;
   }
+
+  get assetTypeOptions() {
+    if (
+      this.form.category &&
+      this.ISSUE_TYPES_BY_CATEGORY[this.form.category]
+    ) {
+      return this.ISSUE_TYPES_BY_CATEGORY[this.form.category];
+    }
+    return [];
+  }
+
+  get isAssetTypeDisabled() {
+    return !this.form.category;
+  }
+
+  get selectedIssueDescription() {
+    if (this.form.category && this.form.assetType) {
+      const options = this.ISSUE_TYPES_BY_CATEGORY[this.form.category];
+      const selected = options.find((opt) => opt.value === this.form.assetType);
+      return selected ? selected.description : "";
+    }
+    return "";
+  }
+
   get severityOptions() {
     return [
       { label: "Routine", value: "Routine" },

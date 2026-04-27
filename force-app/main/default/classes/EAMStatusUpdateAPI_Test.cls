@@ -3,7 +3,7 @@ private class EAMStatusUpdateAPI_Test {
   @TestSetup
   static void setup() {
     Asset_Issue__c issue = new Asset_Issue__c(
-      Asset_Type__c = 'Signage',
+      Asset_Type__c = 'Street Sign Issues',
       Severity__c = 'Routine',
       Description__c = 'Test Issue',
       External_EAM_ID__c = 'EAM-12345'

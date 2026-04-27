@@ -4,7 +4,7 @@ public class AssetTriageController_Test {
   static void setupTestData() {
     // Create an initial record to test against
     Asset_Issue__c currentIssue = new Asset_Issue__c(
-      Asset_Type__c = 'Signage',
+      Asset_Type__c = 'Street Sign Issues',
       Severity__c = 'Urgent',
       Description__c = 'Current Issue',
       Location__Latitude__s = 33.0198,
@@ -17,7 +17,7 @@ public class AssetTriageController_Test {
     for (Integer i = 0; i < 5; i++) {
       historicalIssues.add(
         new Asset_Issue__c(
-          Asset_Type__c = 'Signage',
+          Asset_Type__c = 'Street Sign Issues',
           Severity__c = 'Routine',
           Description__c = 'Historical Issue ' + i,
           Location__Latitude__s = 33.0200, // Very close
@@ -29,7 +29,7 @@ public class AssetTriageController_Test {
     // Create far away record
     historicalIssues.add(
       new Asset_Issue__c(
-        Asset_Type__c = 'Signage',
+        Asset_Type__c = 'Street Sign Issues',
         Severity__c = 'Routine',
         Description__c = 'Far Issue',
         Location__Latitude__s = 34.0000, // > 2 miles away
@@ -40,7 +40,7 @@ public class AssetTriageController_Test {
     // Create different type record
     historicalIssues.add(
       new Asset_Issue__c(
-        Asset_Type__c = 'Pavement',
+        Asset_Type__c = 'Pothole Report',
         Severity__c = 'Urgent',
         Description__c = 'Different Type',
         Location__Latitude__s = 33.0198,
@@ -84,7 +84,7 @@ public class AssetTriageController_Test {
         'Different asset types should not be returned'
       );
       System.assertEquals(
-        'Signage',
+        'Street Sign Issues',
         issue.Asset_Type__c,
         'Asset type should match'
       );
@@ -95,7 +95,7 @@ public class AssetTriageController_Test {
   static void testGetNearbyHistoricalIssues_NoLocation() {
     // A record with no geolocation should immediately return an empty list
     Asset_Issue__c noLocIssue = new Asset_Issue__c(
-      Asset_Type__c = 'Signage',
+      Asset_Type__c = 'Street Sign Issues',
       Severity__c = 'Routine',
       Description__c = 'No Location Issue'
       // Location__Latitude__s and Location__Longitude__s intentionally omitted

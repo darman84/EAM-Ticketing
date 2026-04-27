@@ -6,7 +6,7 @@ public class EAMIntegration_Test {
     Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator(200));
 
     Asset_Issue__c issue = new Asset_Issue__c(
-      Asset_Type__c = 'Signage',
+      Asset_Type__c = 'Street Sign Issues',
       Severity__c = 'Urgent',
       Description__c = 'Test Success'
     );
@@ -40,7 +40,7 @@ public class EAMIntegration_Test {
     Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator(500));
 
     Asset_Issue__c issue = new Asset_Issue__c(
-      Asset_Type__c = 'Water/Sewer',
+      Asset_Type__c = 'Water Leaks',
       Severity__c = 'Routine',
       Description__c = 'Test Fail'
     );
@@ -73,7 +73,7 @@ public class EAMIntegration_Test {
     for (Integer i = 0; i < 100; i++) {
       issues.add(
         new Asset_Issue__c(
-          Asset_Type__c = 'Pavement',
+          Asset_Type__c = 'Pothole Report',
           Severity__c = 'Routine',
           Description__c = 'Bulk Test ' + i
         )
@@ -109,7 +109,7 @@ public class EAMIntegration_Test {
     for (Integer i = 0; i < 60; i++) {
       issues.add(
         new Asset_Issue__c(
-          Asset_Type__c = 'Pavement',
+          Asset_Type__c = 'Pothole Report',
           Severity__c = 'Routine',
           Description__c = 'Chained Bulk Test ' + i
         )
@@ -144,7 +144,7 @@ public class EAMIntegration_Test {
 
     // 2. Pre-populate External_EAM_ID__c to simulate an already-synced record
     Asset_Issue__c issue = new Asset_Issue__c(
-      Asset_Type__c = 'Signage',
+      Asset_Type__c = 'Street Sign Issues',
       Severity__c = 'Urgent',
       Description__c = 'Dispatch Update Test',
       External_EAM_ID__c = 'EAM-EXISTING-001'

@@ -8,7 +8,7 @@ private class AssetIssueTrackerController_Test {
   @TestSetup
   static void setupData() {
     Asset_Issue__c issue = new Asset_Issue__c(
-      Asset_Type__c = 'Signage',
+      Asset_Type__c = 'Street Sign Issues',
       Severity__c = 'Routine',
       Description__c = 'Cracked sign on Main St.',
       External_EAM_ID__c = 'EAM-TEST-001',
@@ -35,7 +35,11 @@ private class AssetIssueTrackerController_Test {
       'Tracking ID should match'
     );
     System.assertEquals('In Progress', result.status, 'Status should match');
-    System.assertEquals('Signage', result.assetType, 'Asset type should match');
+    System.assertEquals(
+      'Street Sign Issues',
+      result.assetType,
+      'Asset type should match'
+    );
     System.assertEquals('Routine', result.severity, 'Severity should match');
     System.assertEquals(
       'Crew dispatched.',
@@ -62,7 +66,7 @@ private class AssetIssueTrackerController_Test {
   @IsTest
   static void testGetIssueDetails_StatusDefaultsToNew_WhenNoEAMStatus() {
     Asset_Issue__c issue = new Asset_Issue__c(
-      Asset_Type__c = 'Pavement',
+      Asset_Type__c = 'Pothole Report',
       Severity__c = 'Urgent',
       Description__c = 'Road damage',
       External_EAM_ID__c = 'EAM-TEST-002'
@@ -177,7 +181,7 @@ private class AssetIssueTrackerController_Test {
   @IsTest
   static void testPollForTrackingId_NotYetAssigned() {
     Asset_Issue__c issue = new Asset_Issue__c(
-      Asset_Type__c = 'Pavement',
+      Asset_Type__c = 'Pothole Report',
       Severity__c = 'Routine',
       Description__c = 'No EAM ID yet'
       // External_EAM_ID__c intentionally omitted

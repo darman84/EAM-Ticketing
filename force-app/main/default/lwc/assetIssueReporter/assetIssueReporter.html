@@ -37,15 +37,43 @@
               </h2>
               <div class="input-stack">
                 <lightning-combobox
-                  name="assetType"
-                  label="Asset Type"
-                  value={form.assetType}
-                  placeholder="Select Asset Type"
-                  options={assetTypeOptions}
+                  name="category"
+                  label="Category"
+                  value={form.category}
+                  placeholder="Select Category"
+                  options={categoryOptions}
                   required
                   onchange={onFieldChange}
                 >
                 </lightning-combobox>
+
+                <lightning-combobox
+                  name="assetType"
+                  label="Specific Issue"
+                  value={form.assetType}
+                  placeholder="Select Issue Type"
+                  options={assetTypeOptions}
+                  required
+                  disabled={isAssetTypeDisabled}
+                  onchange={onFieldChange}
+                >
+                </lightning-combobox>
+
+                <template if:true={selectedIssueDescription}>
+                  <div
+                    class="slds-m-top_xx-small slds-p-around_x-small slds-theme_info slds-theme_alert-texture helper-text-box"
+                  >
+                    <p class="slds-text-body_small helper-text">
+                      <lightning-icon
+                        icon-name="utility:info"
+                        size="x-small"
+                        variant="inverse"
+                        class="slds-m-right_xx-small"
+                      ></lightning-icon>
+                      {selectedIssueDescription}
+                    </p>
+                  </div>
+                </template>
 
                 <lightning-combobox
                   name="severity"

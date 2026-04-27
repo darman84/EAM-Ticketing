@@ -12,19 +12,154 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Signage</fullName>
+                <fullName>Erosion/Creek Maintenance</fullName>
                 <default>false</default>
-                <label>Signage</label>
+                <label>Erosion/Creek Maintenance</label>
             </value>
             <value>
-                <fullName>Water/Sewer</fullName>
+                <fullName>Flooding Issues</fullName>
                 <default>false</default>
-                <label>Water/Sewer</label>
+                <label>Flooding Issues</label>
             </value>
             <value>
-                <fullName>Pavement</fullName>
+                <fullName>Pollutant Discharge into Drainage System</fullName>
                 <default>false</default>
-                <label>Pavement</label>
+                <label>Pollutant Discharge into Drainage System</label>
+            </value>
+            <value>
+                <fullName>ADA Access Issues</fullName>
+                <default>false</default>
+                <label>ADA Access Issues</label>
+            </value>
+            <value>
+                <fullName>Construction on Streets</fullName>
+                <default>false</default>
+                <label>Construction on Streets</label>
+            </value>
+            <value>
+                <fullName>Curb Repair</fullName>
+                <default>false</default>
+                <label>Curb Repair</label>
+            </value>
+            <value>
+                <fullName>Litter or Debris on Street</fullName>
+                <default>false</default>
+                <label>Litter or Debris on Street</label>
+            </value>
+            <value>
+                <fullName>Median/Right Of Way Maintenance</fullName>
+                <default>false</default>
+                <label>Median/Right Of Way Maintenance</label>
+            </value>
+            <value>
+                <fullName>Parking Signage Concerns</fullName>
+                <default>false</default>
+                <label>Parking Signage Concerns</label>
+            </value>
+            <value>
+                <fullName>School Zone Signals</fullName>
+                <default>false</default>
+                <label>School Zone Signals</label>
+            </value>
+            <value>
+                <fullName>Screening Wall Maintenance</fullName>
+                <default>false</default>
+                <label>Screening Wall Maintenance</label>
+            </value>
+            <value>
+                <fullName>Storm Related Issues</fullName>
+                <default>false</default>
+                <label>Storm Related Issues</label>
+            </value>
+            <value>
+                <fullName>Street Sign Issues</fullName>
+                <default>false</default>
+                <label>Street Sign Issues</label>
+            </value>
+            <value>
+                <fullName>Traffic Safety</fullName>
+                <default>false</default>
+                <label>Traffic Safety</label>
+            </value>
+            <value>
+                <fullName>Traffic Signal Issues</fullName>
+                <default>false</default>
+                <label>Traffic Signal Issues</label>
+            </value>
+            <value>
+                <fullName>Street Marking Issue</fullName>
+                <default>false</default>
+                <label>Street Marking Issue</label>
+            </value>
+            <value>
+                <fullName>Sidewalk Repair Request</fullName>
+                <default>false</default>
+                <label>Sidewalk Repair Request</label>
+            </value>
+            <value>
+                <fullName>Pothole Report</fullName>
+                <default>false</default>
+                <label>Pothole Report</label>
+            </value>
+            <value>
+                <fullName>Bulk Waste Violation</fullName>
+                <default>false</default>
+                <label>Bulk Waste Violation</label>
+            </value>
+            <value>
+                <fullName>Cart Replacement - Damaged or Change Size</fullName>
+                <default>false</default>
+                <label>Cart Replacement - Damaged or Change Size</label>
+            </value>
+            <value>
+                <fullName>Hazardous Waste</fullName>
+                <default>false</default>
+                <label>Hazardous Waste</label>
+            </value>
+            <value>
+                <fullName>Household Hazardous Waste Collection</fullName>
+                <default>false</default>
+                <label>Household Hazardous Waste Collection</label>
+            </value>
+            <value>
+                <fullName>Missed Collection</fullName>
+                <default>false</default>
+                <label>Missed Collection</label>
+            </value>
+            <value>
+                <fullName>Locate Meters</fullName>
+                <default>false</default>
+                <label>Locate Meters</label>
+            </value>
+            <value>
+                <fullName>Sewer Stoppage/Overflow</fullName>
+                <default>false</default>
+                <label>Sewer Stoppage/Overflow</label>
+            </value>
+            <value>
+                <fullName>Water Leaks</fullName>
+                <default>false</default>
+                <label>Water Leaks</label>
+            </value>
+            <value>
+                <fullName>Water Meter Boxes/Lids</fullName>
+                <default>false</default>
+                <label>Water Meter Boxes/Lids</label>
+            </value>
+            <value>
+                <fullName>Water Quality</fullName>
+                <default>false</default>
+                <label>Water Quality</label>
+            </value>
+            <value>
+                <fullName>Water Shut Off Request (non-emergency)</fullName>
+                <default>false</default>
+                <label>Water Shut Off Request (non-emergency)</label>
+            </value>
+            <value>
+                <fullName>Fire Hydrant Issue</fullName>
+                <default>false</default>
+                <label>Fire Hydrant Issue</label>
             </value>
         </valueSetDefinition>
     </valueSet>
