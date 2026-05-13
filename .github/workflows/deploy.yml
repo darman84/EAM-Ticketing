@@ -21,7 +21,9 @@ jobs:
           npm run prettier:verify
       - name: Install Salesforce CLI
         run: npm install -g @salesforce/cli@2.56.7
+      - name: Authenticate to Salesforce Org
+        run: |
+          echo "${{ secrets.SFDX_AUTH_URL }}" > sfdx_auth.txt
+          sf org login sfdx-url -f sfdx_auth.txt --set-default --alias default
       - name: Run Apex Tests and Deploy
-        env:
-          SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
         run: sf project deploy start --test-level RunLocalTests
