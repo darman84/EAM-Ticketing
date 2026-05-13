@@ -22,6 +22,8 @@ jobs:
       - name: Install Salesforce CLI
         run: npm install -g @salesforce/cli
       - name: Authenticate to Salesforce Org
-        run: printf '%s' "${{ secrets.SFDX_AUTH_URL }}" | sf org login sfdx-url --sfdx-url-stdin --set-default --alias default
+        env:
+          SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
+        run: sf org login sfdx-url --set-default --alias default
       - name: Run Apex Tests and Deploy
         run: sf project deploy start --test-level RunLocalTests
