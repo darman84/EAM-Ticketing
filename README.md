@@ -47,15 +47,6 @@ This repository is configured with a GitHub Actions CI/CD pipeline. Pushes and p
 - Set the appropriate time zone on the Experience Cloud site.
 - Once activated, your public portal will be available at `https://<your-experience-site-domain>/s/` and the tracker at `https://<your-experience-site-domain>/s/ticket-status?id=<EAM-ID>`.
 
-## Developer Workflow
-
-This project includes pre-configured VS Code tasks (`.vscode/tasks.json`) to streamline development operations. You can run these directly from the Command Palette (`Tasks: Run Task`):
-
-- **Retrieve / Deploy:** Standard commands to pull/push metadata.
-- **Code Quality:** Format with Prettier and lint with ESLint.
-- **Testing:** Run Apex unit tests or LWC unit tests.
-- **Compound Workflows:** "Full Pre-Deploy Check" runs formatting, linting, tests, and deployment sequentially.
-
 ## Usage
 
 1. Navigate to the Experience Cloud site and fill out the mobile-responsive form (category, asset type, severity, description, email, Leaflet.js map location, and optional photo uploads).
